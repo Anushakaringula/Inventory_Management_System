@@ -1,0 +1,92 @@
+{
+  "inventory": [
+   
+    { "id": 1, "name": "Milk", "category": "Dairy", "brand": "Amul", "price": 50, "unit": "liter", "stock": 100, "expiry_date": "2025-09-05", "supplier": "Amul Dairy","image":"http://localhost:4000/images/milk.jpeg" },
+    { "id": 2, "name": "Cheese", "category": "Dairy", "brand": "Britannia", "price": 200, "unit": "500 g", "stock": 50, "expiry_date": "2026-01-10", "supplier": "Britannia","image":"http://localhost:4000/images/cheese.jpg" },
+    { "id": 3, "name": "Butter", "category": "Dairy", "brand": "Amul", "price": 120, "unit": "200 g", "stock": 70, "expiry_date": "2025-12-01", "supplier": "Amul Dairy","image":"http://localhost:4000/images/butter.png" },
+    { "id": 4, "name": "Yogurt", "category": "Dairy", "brand": "Mother Dairy", "price": 40, "unit": "200 ml", "stock": 90, "expiry_date": "2025-09-15", "supplier": "Mother Dairy","image":"http://localhost:4000/images/yogurt.jpg" },
+    { "id": 27, "name": "Paneer", "category": "Dairy", "brand": "Amul", "price": 180, "unit": "500 g", "stock": 60, "expiry_date": "2025-09-20", "supplier": "Amul Dairy","image":"http://localhost:4000/images/panner.jpg" },
+     { "id": 34, "name": "Ice Cream", "category": "Dairy", "brand": "Amul", "price": 120, "unit": "500 ml", "stock": 50, "expiry_date": "2025-10-01", "supplier": "Amul Dairy","image":"http://localhost:4000/images/ice-cream.jpeg" },
+    
+    
+    { "id": 5, "name": "Rice", "category": "Grains", "brand": "India Gate", "price": 55, "unit": "kg", "stock": 120, "expiry_date": "2026-01-15", "supplier": "ABC Wholesalers","image":"http://localhost:4000/images/rice.jpeg" },
+    { "id": 6, "name": "Wheat Flour", "category": "Grains", "brand": "Aashirvaad", "price": 60, "unit": "kg", "stock": 95, "expiry_date": "2026-02-10", "supplier": "Grain Hub","image":"http://localhost:4000/images/wheatflour.jpg" },
+    { "id": 31, "name": "Oats", "category": "Grains", "brand": "Quaker", "price": 120, "unit": "500 g", "stock": 70, "expiry_date": "2026-06-01", "supplier": "Quaker","image":"http://localhost:4000/images/oats.jpg" },
+   
+
+    { "id": 7, "name": "Sugar", "category": "Groceries", "brand": "Madhur", "price": 45, "unit": "kg", "stock": 150, "expiry_date": "2026-03-20", "supplier": "Sweet Traders","image":"http://localhost:4000/images/sugar.jpg" },
+    { "id": 8, "name": "Salt", "category": "Groceries", "brand": "Tata", "price": 20, "unit": "kg", "stock": 180, "expiry_date": "2026-12-01", "supplier": "Tata Chemicals","image":"http://localhost:4000/images/salt.jpeg" },
+    { "id": 25, "name": "Cooking Oil", "category": "Groceries", "brand": "Fortune", "price": 180, "unit": "1 liter", "stock": 120, "expiry_date": "2026-04-01", "supplier": "Adani Wilmar","image":"http://localhost:4000/images/oil.jpeg" },
+    { "id": 26, "name": "Soy Sauce", "category": "Groceries", "brand": "Kikkoman", "price": 250, "unit": "500 ml", "stock": 50, "expiry_date": "2026-08-01", "supplier": "Kikkoman","image":"http://localhost:4000/images/soyasauce.jpeg" },
+    { "id": 32, "name": "Honey", "category": "Groceries", "brand": "Dabur", "price": 250, "unit": "250 g", "stock": 60, "expiry_date": "2026-12-01", "supplier": "Dabur","image":"http://localhost:4000/images/honey.jpeg" },
+    { "id": 33, "name": "Cornflakes", "category": "Groceries", "brand": "Kellogg's", "price": 200, "unit": "500 g", "stock": 80, "expiry_date": "2026-05-01", "supplier": "Kellogg's" ,"image":"http://localhost:4000/images/cornflakes.jpeg"},
+    { "id": 38, "name": "Tomato Ketchup", "category": "Groceries", "brand": "Kissan", "price": 60, "unit": "500 g", "stock": 80, "expiry_date": "2026-04-01", "supplier": "Kissan" ,"image":"http://localhost:4000/images/ketchup.jpg"},
+     { "id": 43, "name": "Almonds", "category": "Groceries", "brand": "Nature's Best", "price": 600, "unit": "250 g", "stock": 50, "expiry_date": "2026-12-01", "supplier": "Nature's Best","image":"http://localhost:4000/images/almonds.jpeg" },
+    { "id": 44, "name": "Cashews", "category": "Groceries", "brand": "Cashew King", "price": 700, "unit": "250 g", "stock": 40, "expiry_date": "2026-12-01", "supplier": "Cashew King","image":"http://localhost:4000/images/cashews.jpeg" },
+    { "id": 45, "name": "Strawberry Jam", "category": "Groceries", "brand": "Kissan", "price": 120, "unit": "500 g", "stock": 60, "expiry_date": "2026-06-01", "supplier": "Kissan","image":"http://localhost:4000/images/straberry.jpeg" },
+    
+    
+    { "id": 9, "name": "Tomato", "category": "Vegetables", "brand": "Local Farm", "price": 30, "unit": "kg", "stock": 150, "expiry_date": "2025-09-08", "supplier": "Local Farm","image":"http://localhost:4000/images/tomato.jpeg" },
+    { "id": 10, "name": "Potato", "category": "Vegetables", "brand": "Local Farm", "price": 25, "unit": "kg", "stock": 200, "expiry_date": "2025-09-10", "supplier": "Local Farm" ,"image":"http://localhost:4000/images/potato.jpeg"},
+    { "id": 11, "name": "Onion", "category": "Vegetables", "brand": "Local Farm", "price": 35, "unit": "kg", "stock": 180, "expiry_date": "2025-09-12", "supplier": "Local Farm" ,"image":"http://localhost:4000/images/onion.jpeg"},
+    { "id": 29, "name": "Cucumber", "category": "Vegetables", "brand": "Local Farm", "price": 25, "unit": "kg", "stock": 120, "expiry_date": "2025-09-08", "supplier": "Local Farm","image":"http://localhost:4000/images/cucumber.jpeg" },
+    { "id": 30, "name": "Carrot", "category": "Vegetables", "brand": "Local Farm", "price": 40, "unit": "kg", "stock": 90, "expiry_date": "2025-09-12", "supplier": "Local Farm" ,"image":"http://localhost:4000/images/carrot.jpeg"},
+   
+    
+  
+    { "id": 12, "name": "Apple", "category": "Fruits", "brand": "Himachal Fresh", "price": 150, "unit": "kg", "stock": 90, "expiry_date": "2025-09-20", "supplier": "Himachal Farm","image":"http://localhost:4000/images/apple.jpeg" },
+    { "id": 13, "name": "Banana", "category": "Fruits", "brand": "Local Farm", "price": 50, "unit": "dozen", "stock": 100, "expiry_date": "2025-09-08", "supplier": "Local Farm","image":"http://localhost:4000/images/banana.jpeg" },
+    { "id": 14, "name": "Orange", "category": "Fruits", "brand": "Nagpur Fresh", "price": 120, "unit": "kg", "stock": 80, "expiry_date": "2025-09-15", "supplier": "Nagpur Farm","image":"http://localhost:4000/images/orange.jpeg" },
+    { "id": 28, "name": "Mango", "category": "Fruits", "brand": "Alphonso", "price": 250, "unit": "kg", "stock": 50, "expiry_date": "2025-05-10", "supplier": "Mango Farms","image":"http://localhost:4000/images/mango.jpeg" },
+    
+    
+    { "id": 15, "name": "Eggs", "category": "Poultry", "brand": "Farm Fresh", "price": 6, "unit": "piece", "stock": 200, "expiry_date": "2025-09-10", "supplier": "Local Poultry Farm","image":"http://localhost:4000/images/eggs.jpeg" },
+    { "id": 16, "name": "Chicken Breast", "category": "Poultry", "brand": "Farm Fresh", "price": 250, "unit": "kg", "stock": 50, "expiry_date": "2025-09-08", "supplier": "Local Poultry Farm","image":"http://localhost:4000/images/chickenbreast.jpeg" },
+   
+   
+    { "id": 17, "name": "Chips", "category": "Snacks", "brand": "Lays", "price": 20, "unit": "packet", "stock": 120, "expiry_date": "2026-01-01", "supplier": "PepsiCo","image":"http://localhost:4000/images/chips.jpeg" },
+    { "id": 18, "name": "Biscuits", "category": "Snacks", "brand": "Britannia", "price": 30, "unit": "packet", "stock": 100, "expiry_date": "2026-02-01", "supplier": "Britannia","image":"http://localhost:4000/images/biscuit.jpeg" },
+    { "id": 19, "name": "Chocolate", "category": "Snacks", "brand": "Cadbury", "price": 40, "unit": "bar", "stock": 80, "expiry_date": "2026-03-01", "supplier": "Cadbury","image":"http://localhost:4000/images/chocolate.jpeg" },
+    { "id": 37, "name": "Maggi Noodles", "category": "Snacks", "brand": "Nestle", "price": 15, "unit": "packet", "stock": 100, "expiry_date": "2026-03-01", "supplier": "Nestle","image":"http://localhost:4000/images/maggie.png" },
+    { "id": 42, "name": "Cereal Bars", "category": "Snacks", "brand": "Kellogg's", "price": 30, "unit": "pack", "stock": 80, "expiry_date": "2026-06-01", "supplier": "Kellogg's","image":"http://localhost:4000/images/cerelbar.jpeg" },
+    { "id": 51, "name": "Murmure (Puffed Rice)", "category": "Snacks","brand":"haldirams", "price": 30,"image":"http://localhost:4000/images/murmure.jpeg" },
+    { "id": 52, "name": "Mungdaal", "category": "Snacks","brand":"haldirams", "price": 10 },
+    { "id": 53, "name": "aloobhuj", "category": "Snacks","brand":"haldirams", "price": 10 },
+    { "id": 54, "name": "Kix Cereal", "category": "Breakfast & Cereals", "price": 200 },
+    
+
+ 
+    { "id": 23, "name": "Detergent Powder", "category": "Household", "brand": "Surf Excel", "price": 180, "unit": "1 kg", "stock": 80, "expiry_date": "2027-01-01", "supplier": "Hindustan Unilever" },
+    { "id": 24, "name": "Dishwash Liquid", "category": "Household", "brand": "Vim", "price": 50, "unit": "500 ml", "stock": 70, "expiry_date": "2026-09-01", "supplier": "Hindustan Unilever" },
+   { "id": 39, "name": "Handwash", "category": "Household", "brand": "Lifebuoy", "price": 100, "unit": "250 ml", "stock": 70, "expiry_date": "2026-09-01", "supplier": "Hindustan Unilever" },
+    { "id": 40, "name": "Sanitary Napkins", "category": "Household", "brand": "Stayfree", "price": 150, "unit": "pack", "stock": 60, "expiry_date": "2027-01-01", "supplier": "Johnson & Johnson" },
+    { "id": 41, "name": "Face Mask", "category": "Household", "brand": "3M", "price": 50, "unit": "piece", "stock": 200, "expiry_date": "2027-12-01", "supplier": "3M" },
+    
+    
+    {"id": 46, "name": "Assam Tea", "category": "Beverages", "brand": "Tata Tea", "price": 150, "unit": "500 g", "stock": 100, "expiry_date": "2026-07-01", "supplier": "Tata Consumer" },
+    { "id": 47, "name": "Darjeeling Tea", "category": "Beverages", "brand": "Twinings", "price": 250, "unit": "200 g", "stock": 50, "expiry_date": "2026-10-01", "supplier": "Twinings India" },
+    { "id": 48, "name": "Green Tea", "category": "Beverages", "brand": "Lipton", "price": 120, "unit": "100 g", "stock": 70, "expiry_date": "2026-08-01", "supplier": "HUL" },
+    { "id": 49, "name": "Herbal Tea", "category": "Beverages", "brand": "Organic India", "price": 180, "unit": "50 bags", "stock": 60, "expiry_date": "2026-12-01", "supplier": "Organic India" },
+    { "id": 50, "name": "Masala Chai", "category": "Beverages", "brand": "Wagh Bakri", "price": 140, "unit": "250 g", "stock": 80, "expiry_date": "2026-09-01", "supplier": "Wagh Bakri Tea Group" },
+    { "id": 20, "name": "Tea", "category": "Beverages", "brand": "Tata Tea", "price": 150, "unit": "100 g", "stock": 90, "expiry_date": "2026-06-01", "supplier": "Tata" },
+    { "id": 21, "name": "Coffee", "category": "Beverages", "brand": "Nescafe", "price": 200, "unit": "100 g", "stock": 70, "expiry_date": "2026-05-01", "supplier": "Nestle" },
+    { "id": 22, "name": "Juice", "category": "Beverages", "brand": "Real", "price": 60, "unit": "1 liter", "stock": 60, "expiry_date": "2025-12-01", "supplier": "Dabur" },
+    { "id": 35, "name": "Water Bottle", "category": "Beverages", "brand": "Bisleri", "price": 20, "unit": "1 liter", "stock": 200, "expiry_date": "2027-01-01", "supplier": "Bisleri" },
+    { "id": 36, "name": "Pepsi", "category": "Beverages", "brand": "PepsiCo", "price": 35, "unit": "500 ml", "stock": 150, "expiry_date": "2026-12-01", "supplier": "PepsiCo" },
+    
+    
+    
+    { "id": 55, "name": "Dairy Milk", "brand": "Cadbury", "category": "Chocolates", "price": 40 },
+    { "id": 56, "name": "Silk", "brand": "Cadbury", "category": "Chocolates", "price": 150 },
+    { "id": 57, "name": "5 Star", "brand": "Cadbury", "category": "Chocolates", "price": 20 },
+    { "id": 58, "name": "KitKat", "brand": "Nestle", "category": "Chocolates", "price": 25 },
+    { "id": 59, "name": "Perk", "brand": "Cadbury", "category": "Chocolates", "price": 10 },
+    { "id": 60, "name": "Munch", "brand": "Nestle", "category": "Chocolates", "price": 10 },
+    { "id": 61, "name": "Snickers", "brand": "Mars", "category": "Chocolates", "price": 45 },
+    { "id": 62, "name": "Ferrero Rocher", "brand": "Ferrero", "category": "Chocolates", "price": 400 },
+    {"id": 63,"name": "Galaxy","brand": "Mars","category":"chocolates"}
+
+
+  ]
+}
+
