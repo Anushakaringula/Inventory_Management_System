@@ -13,29 +13,23 @@ function App() {
   const [user, setUser] = useState(null);
 
   return (
-
       <>
       <Navbar user={user} />
       <Routes>
-       <Route
+
+        <Route
           path="/"
           element={
             <Home
               cart={cart}
               setCart={setCart}
               favorites={favorites}
-              setFavorites={setFavorites}
-            />
-          }
-        />
-        <Route path="/cart" element={<Cart cart={cart} />} />
-        <Route path="/login" element={<Login onLogin={(user) => setUser(user)} />}
-/>
+              setFavorites={setFavorites}/>}/>
+        <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />}/>
+        <Route path="/login" element={<Login onLogin={(user) => setUser(user)} />}/>
 
       </Routes>
       </>
-  
-   
   )
 }
 

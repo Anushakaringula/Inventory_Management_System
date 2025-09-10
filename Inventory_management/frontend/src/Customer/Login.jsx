@@ -25,8 +25,7 @@ function Login({ onLogin }) {
         justifyContent: "center",
         alignItems: "center",
         height: "80vh",
-      }}
-    >
+      }}>
       <div
         style={{
           width: "350px",
@@ -34,15 +33,13 @@ function Login({ onLogin }) {
           borderRadius: "10px",
           boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
           backgroundColor: "#fff",
-        }}
-      >
+        }}>
         <h2 style={{ textAlign: "center", marginBottom: "25px", color: "green" }}>
           Login
         </h2>
         <form
           onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-        >
+          style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
           <input
             type="email"
             placeholder="Email"
@@ -81,7 +78,7 @@ function Login({ onLogin }) {
               fontSize: "16px",
               transition: "0.3s",
             }}
-            onMouseOver={(e) => (e.target.style.backgroundColor = "#006400")}
+            onMouseOver={(e) => (e.target.style.backgroundColor = "#cf6736ff")}
             onMouseOut={(e) => (e.target.style.backgroundColor = "green")}
           >
             Login
