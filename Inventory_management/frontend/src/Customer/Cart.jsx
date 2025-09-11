@@ -53,7 +53,7 @@ function Cart( {cart ,  setCart }) {
                 </button>
                 <button onClick={() => toggleCart(item)}
                   style={{
-                    backgroundColor: "red",
+                    backgroundColor: "blue",
                     border: "none",
                     color: "white",
                     padding: "8px",
