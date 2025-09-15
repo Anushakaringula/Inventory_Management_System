@@ -6,19 +6,33 @@ function Home({cart, setCart, favorites, setFavorites}) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   
   useEffect(() => {
-    fetch("http://localhost:4000/api/grocery")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched data:", data); 
-        setGrocery(data.inventory);
-      })
-      .catch((err) => console.error("Error fetching:", err));
-  }, []);
+  fetch("http://localhost:4000/api/grocery")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Fetched data:", data); 
+      setGrocery(data); // <-- directly set the array
+    })
+    .catch((err) => console.error("Error fetching:", err));
+}, []);
+
   const filteredItems=selectedCategory?grocery.filter((item)=> selectedCategory.includes(item.category)):grocery;
 
   
   const toggleCart = (item) => {
     setCart((prev) => {
+      const exists = prev.find((p) => p.id === item.id);
+      if (exists) {
+        // remove item
+        return prev.filter((p) => p.id !== item.id);
+      } else {
+        // add item
+        return [...prev, item];
+      }
+    });
+  };
+
+  const toggleFavorites = (item) => {
+    setFavorites((prev) => {
       const exists = prev.find((p) => p.id === item.id);
       if (exists) {
         // remove item
@@ -71,9 +85,10 @@ function Home({cart, setCart, favorites, setFavorites}) {
                 top: "10px",
                 right: "10px",
                 fontSize: "30px",
+                
                 cursor: "pointer",
               }}>
-                <img src={ "heart.jpg"} alt="fav" width={"20px"} height={"20px"} />
+                <img src={ favorites.find(fav => fav.id === item.id) ? "redheart.jpg":"heart.jpg"} alt="fav" width={"20px"} height={"20px"}  onClick={()=>toggleFavorites(item)}/>
               </span>
 
               <img src={item.image} alt={item.name} width="100px" height="100px" />

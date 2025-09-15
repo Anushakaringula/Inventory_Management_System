@@ -1,41 +1,63 @@
-// const express = require("express");
-// const app = express();
-// const data = require("./grocery.json"); 
-// app.get("/", (req, res) => {
-//   res.send("Welcome to Grocery API! Use /api to get data.");
-// });
-
-// app.get("/api", (req, res) => {
-//   //res.json(data);
-//   res.json(data);
-// });
-
-
-
-// app.listen(5000, () => console.log("API running on http://localhost:5000"));
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs");
-const app = express();
+const mongoose = require("mongoose");
+const fs= require("fs");
 const path=require("path");
-app.use(cors()); // allow requests from React frontend
+const app = express();
+const PORT = 4000;
 
+// Middleware
+app.use(cors());
+app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-app.get("/api/grocery", (req, res) => {
-  fs.readFile("grocery.json", "utf-8", (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Failed to read file" });
-    } else {
-      res.json(JSON.parse(data));
-    }
+
+// MongoDB connection
+const mongoURI = "mongodb+srv://lkgcoding:code%40lkg@inventory-management.lu8yxdh.mongodb.net/inventorydb?retryWrites=true&w=majority&appName=Inventory-Management";
+
+mongoose.connect(mongoURI)
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+
+    // Start server only after DB connection succeeds
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection failed:", err);
   });
-});
-app.get("/",(req,res)=>{
-  
+
+// --- SCHEMA & MODEL ---
+const grocerySchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+  category: String,
+  brand: String,
+  price: Number,
+  unit: String,
+  stock: Number,
+  expiry_date: String,
+  supplier: String,
+  image: String
 });
 
-const PORT = 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+const Grocery = mongoose.model("Grocery", grocerySchema, "grocery"); 
+// ⚠️ third param "grocery" must match your collection name
+
+// --- ROUTES ---
+// Home
+app.get("/", (req, res) => {
+  res.send("Welcome to Grocery API! Use /api/grocery to fetch grocery data.");
 });
+
+// Fetch groceries from MongoDB
+app.get("/api/grocery", async (req, res) => {
+  try {
+    const groceries = await Grocery.find();
+    res.json(groceries);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch groceries" });
+  }
+});
+
