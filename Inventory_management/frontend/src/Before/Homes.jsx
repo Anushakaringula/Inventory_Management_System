@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Category from "./Category";
+import Category from "../Customer/Category";
 import { Link } from "react-router-dom";
 
-function Home({cart, setCart, favorites, setFavorites}) {
+function Home() {
   const [grocery, setGrocery] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   
@@ -19,31 +19,7 @@ function Home({cart, setCart, favorites, setFavorites}) {
   const filteredItems=selectedCategory?grocery.filter((item)=> selectedCategory.includes(item.category)):grocery;
 
   
-  const toggleCart = (item) => {
-    setCart((prev) => {
-      const exists = prev.find((p) => p.id === item.id);
-      if (exists) {
-        // remove item
-        return prev.filter((p) => p.id !== item.id);
-      } else {
-        // add item
-        return [...prev, item];
-      }
-    });
-  };
 
-  const toggleFavorites = (item) => {
-    setFavorites((prev) => {
-      const exists = prev.find((p) => p.id === item.id);
-      if (exists) {
-        // remove item
-        return prev.filter((p) => p.id !== item.id);
-      } else {
-        // add item
-        return [...prev, item];
-      }
-    });
-  };
 
   return (
     <>
@@ -85,33 +61,8 @@ function Home({cart, setCart, favorites, setFavorites}) {
                   <p>Price: ₹{item.price}</p>
                   <p>Unit: {item.unit}</p>
                   <p>Category: {item.category}</p>
-                </Link>
-              <span 
-                style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                fontSize: "30px",
-                
-                cursor: "pointer",
-              }}>
-                <img src={ favorites.find(fav => fav.id === item.id) ? "red-heart.png":"heart.jpg"} alt="fav" width={"20px"} height={"20px"}  onClick={()=>toggleFavorites(item)}/>
-              </span>
+            </Link>
 
-              
-              <div style={{display: "flex",flexDirection: "row",gap:"15px"}} >
-              
-                <button onClick={()=>toggleCart(item)}
-                  style={{
-                    backgroundColor: "red",
-                    border: "none",
-                    color: "white",
-                    padding: "8px",
-                    borderRadius: "8px",
-                  }}>
-                   {cart.find((p) => p.id === item.id) ? "remove from cart" : "Add to Cart"}
-                </button>
-              </div>
             </div>
           ))
       )}</div>

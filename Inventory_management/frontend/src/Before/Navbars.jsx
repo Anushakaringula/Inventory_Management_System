@@ -20,8 +20,8 @@ export default function Navbar() {
             
           <input type="text" placeholder="search" style={{height:"25px",width:"400px",
           border:"1px solid #ddd",padding: "8px 12px", borderRadius: "8px",
-          outline: "none",fontSize: "15px",boxShadow:"0 2px 5px rgba(0, 0, 0, 0.05)"}}>
-          </input>
+          outline: "none",fontSize: "15px",boxShadow:"0 2px 5px rgba(0, 0, 0, 0.05)"}}/>
+          
 
           <Link to="/"  style={{textDecoration: "none",color: "black",display: "flex",
           flexDirection: "column",alignItems: "center", }}>
@@ -39,12 +39,7 @@ export default function Navbar() {
             </div>
           </Link>
                 
-          <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}>
-            <div style={{display:"flex",alignItems:"center",flexDirection:"column",gap:"5px"}}>
-              <img src="/cart.png" alt="login" width={"25px"} height={"25px"}/>
-              <p style={{marginTop:"-2px",fontSize:"14px"}}>Cart</p>
-            </div>
-          </Link>
+         
 
         </div>
       </nav>
@@ -55,16 +50,12 @@ export default function Navbar() {
             top: "90px",
             left: "10px",
             width: "200px",
-            background: "#fafafaf8",
+            background: "rgba(250, 250, 250, 0.97)",
             boxShadow: "2px 0 6px rgba(0,0,0,0.1)",
             padding: "10px",
             zIndex:2
           }}
         >
-          <p>Your Orders</p>
-          <Link to="/favorites" style={{ textDecoration: "none", color: "inherit" }} >
-              <p style={{marginTop:"-2px",fontSize:"14px"}}>Favorites</p>
-          </Link>
           <p>Settings</p>
           <p>Contact us</p>
           <p>Help</p>

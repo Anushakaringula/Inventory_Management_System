@@ -41,16 +41,7 @@ function Cart( {cart ,  setCart }) {
               <p>Category: {item.category}</p>
 
               <div style={{ display: "flex", flexDirection: "row", gap: "15px" }}>
-                <button
-                  style={{
-                    backgroundColor: "green",
-                    border: "none",
-                    color: "white",
-                    padding: "8px",
-                    borderRadius: "8px",
-                  }}>
-                  Buy now
-                </button>
+              
                 <button onClick={() => toggleCart(item)}
                   style={{
                     backgroundColor: "blue",

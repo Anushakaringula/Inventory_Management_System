@@ -38,16 +38,7 @@ function Favorites( { favorites,setFavorites }) {
               <p>Category: {item.category}</p>
 
               <div style={{ display: "flex", flexDirection: "row", gap: "15px" }}>
-                <button
-                  style={{
-                    backgroundColor: "green",
-                    border: "none",
-                    color: "white",
-                    padding: "8px",
-                    borderRadius: "8px",
-                  }}>
-                  Buy now
-                </button>
+        
                 <button onClick={() => toggleFavorites(item)}
                   style={{
                     backgroundColor: "red",
