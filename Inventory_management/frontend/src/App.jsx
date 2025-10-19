@@ -53,6 +53,7 @@ import Products from "./Before/Products";
 import Login from "./Before/Login";
 import Boss from "./Admin/Boss";
 import Home from "./Customer/Home";
+import Signup from "./Before/Signup";
 function App()
 {
   return (
@@ -68,6 +69,7 @@ function App()
              <Route path="/login" element={<Login/>}/>
              <Route path="/boss" element={<Boss/>}/>
               <Route path="/home" element={<Home/>}/>
+              <Route path="/signup" element={<Signup/>}/>
       </Routes>
       </>
   )

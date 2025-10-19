@@ -166,3 +166,67 @@ app.put("/api/grocery/:id", async (req, res) => {
 app.get("/", (req, res) => {
   res.send("🛒 Inventory Management API is running...");
 });
+
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  password: String,
+  village: String,
+  mandal: String,
+  district: String,
+  state: String,
+  orders: { type: Array, default: [] },
+  favourites: { type: Array, default: [] },
+  cart: { type: Array, default: [] }
+});
+
+const User = mongoose.model("User", userSchema, "users");
+
+// ==========================
+// User Routes
+// ==========================
+
+// ✅ Get all users
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// ✅ Add a new user
+app.post("/api/users", async (req, res) => {
+  try {
+    const newUser = new User(req.body);
+    const savedUser = await newUser.save();
+    res.status(201).json(savedUser);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to add user" });
+  }
+});
+
+// ✅ Login route
+app.post("/api/users/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    // simple password check (plaintext)
+    if (user.password !== password) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    res.status(200).json({ message: "Login successful", user });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Server error during login" });
+  }
+});
+

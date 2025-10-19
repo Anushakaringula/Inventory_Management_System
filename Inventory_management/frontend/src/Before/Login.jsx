@@ -1,30 +1,41 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // hook to programmatically navigate
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === "user@gmail.com" && password === "123456") {
-      // Redirect to Home
-      navigate("/Boss"); 
-    }
-    // else if (email === "admin@gmail.com" && password === "code@lkg") {
-    //   // Redirect to Home
-    //   navigate("../Admin/Admin"); 
-    // }
-    else {
-      alert("Invalid credentials!");
+    try {
+      const res = await fetch("http://localhost:4000/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (res.status === 200) {
+        alert(data.message);
+        navigate("/"); // Redirect to home after successful login
+      } else if (res.status === 400 && data.message === "Invalid credentials") {
+        // If user email doesn't exist
+        alert("User not found! Please Sign Up.");
+        navigate("/Signup"); // Redirect to SignUp page
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error!");
     }
   };
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: "100px" }}>
       <form
-        onSubmit={handleLogin} // also works if user presses Enter
+        onSubmit={handleLogin}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -54,7 +65,6 @@ function Login() {
         />
         <button
           type="submit"
-          onClick={handleLogin} // click handler also triggers login
           style={{
             padding: "10px",
             borderRadius: "5px",
@@ -67,6 +77,10 @@ function Login() {
         >
           Login
         </button>
+
+        <p style={{ textAlign: "center", marginTop: "10px" }}>
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </p>
       </form>
     </div>
   );
