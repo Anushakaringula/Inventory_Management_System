@@ -19,76 +19,125 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
     quantity: 1,
   });
 
+  // ✅ Get logged-in user
+  const user = JSON.parse(localStorage.getItem("user"));
+
   // --- Fetch products and setup ---
   useEffect(() => {
     fetch("http://localhost:4000/api/grocery")
       .then((res) => res.json())
       .then((data) => {
         setAllProducts(data);
+
+        // Set unique categories
         const uniqueCategories = [...new Set(data.map((item) => item.category))];
         setCategories(uniqueCategories);
 
-        const current = data.find((item) => item.id.toString() === id);
+        // Find current product
+        const current = data.find((item) => item._id.toString() === id);
         setProduct(current);
 
+        // Find other products in same category
         if (current) {
           const sameCategory = data.filter(
-            (item) =>
-              item.category === current.category && item.id.toString() !== id
+            (item) => item.category === current.category && item._id.toString() !== id
           );
           setCategoryProducts(sameCategory);
           setExpandedCategory(current.category);
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching products:", err));
   }, [id]);
 
-  if (!product) return <p>Loading...</p>;
+  if (!product) return <p>Loading product or product not found...</p>;
 
-  // --- Toggle Cart & Favorites ---
-  const toggleCart = (p) => {
-    setCart((prev) =>
-      prev.find((item) => item.id === p.id)
-        ? prev.filter((item) => item.id !== p.id)
-        : [...prev, p]
-    );
+  // --- Toggle Cart & Update Backend ---
+  const toggleCart = async (item) => {
+    if (!user) {
+      alert("Please login to add items to cart");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/users/cart/${item._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user._id }),
+        }
+      );
+      const data = await res.json();
+      console.log("Cart updated in DB:", data);
+
+      setCart((prev) => {
+        const exists = prev.find((p) => p._id === item._id);
+        if (exists) {
+          return prev.filter((p) => p._id !== item._id);
+        } else {
+          return [...prev, item];
+        }
+      });
+    } catch (err) {
+      console.error("Error updating cart:", err);
+    }
   };
 
-  const toggleFavorites = (p) => {
-    setFavorites((prev) =>
-      prev.find((item) => item.id === p.id)
-        ? prev.filter((item) => item.id !== p.id)
-        : [...prev, p]
-    );
+  // --- Toggle Favorites & Update Frontend ---
+  const toggleFavorites = async (item) => {
+    if (!user) {
+      alert("Please login to add favorites");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/users/favorites/${item._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user._id }),
+        }
+      );
+      const data = await res.json();
+      console.log("Favorites updated in DB:", data);
+
+      setFavorites((prev) => {
+        const exists = prev.find((p) => p._id === item._id);
+        if (exists) {
+          return prev.filter((p) => p._id !== item._id);
+        } else {
+          return [...prev, item];
+        }
+      });
+    } catch (err) {
+      console.error("Error updating favorites:", err);
+    }
   };
 
+  // --- Expand/Collapse Category ---
   const toggleCategory = (cat) => {
     setExpandedCategory((prev) => (prev === cat ? null : cat));
   };
 
+  // --- Rating Display ---
   const rating = 4.5;
   const stars = Array.from({ length: 5 }, (_, i) => (
     <span key={i}>{i < Math.floor(rating) ? "⭐" : i < rating ? "✨" : "☆"}</span>
   ));
 
-  // --- Buy Now Form Handlers ---
+  // --- Buy Now Handlers ---
   const handleBuyNow = () => {
     if (product.stock <= 0) {
       alert("❌ Out of stock!");
       return;
     }
 
-    // Decrease stock locally in product
     setProduct((prev) => ({ ...prev, stock: prev.stock - 1 }));
-
-    // Update in allProducts list
     setAllProducts((prev) =>
-      prev.map((p) =>
-        p.id === product.id ? { ...p, stock: p.stock - 1 } : p
-      )
+      prev.map((p) => (p._id === product._id ? { ...p, stock: p.stock - 1 } : p))
     );
 
-    // Open the order form
     setShowForm(true);
   };
 
@@ -146,19 +195,18 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
               >
                 {catProducts.map((p) => (
                   <div
-                    key={p.id}
+                    key={p._id}
                     style={{
                       display: "flex",
                       alignItems: "center",
                       gap: "10px",
                       margin: "8px 0",
                       cursor: "pointer",
-                      backgroundColor:
-                        p.id.toString() === id ? "#e6ffe6" : "transparent",
+                      backgroundColor: p._id === id ? "#e6ffe6" : "transparent",
                       padding: "5px",
                       borderRadius: "5px",
                     }}
-                    onClick={() => navigate(`/product/${p.id}`)}
+                    onClick={() => navigate(`/product/${p._id}`)}
                   >
                     <img
                       src={p.image}
@@ -202,7 +250,7 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
               <h1>{product.name}</h1>
               <img
                 src={
-                  favorites.find((fav) => fav.id === product.id)
+                  favorites.find((fav) => fav._id === product._id)
                     ? "/red-heart.png"
                     : "/heart.jpg"
                 }
@@ -234,7 +282,7 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
                   cursor: "pointer",
                 }}
               >
-                {cart.find((p) => p.id === product.id)
+                {cart.find((p) => p._id === product._id)
                   ? "Remove from Cart"
                   : "Add to Cart"}
               </button>
@@ -244,13 +292,11 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
                 disabled={product.stock <= 0}
                 style={{
                   padding: "8px 14px",
-                  backgroundColor:
-                    product.stock <= 0 ? "gray" : "#28a745",
+                  backgroundColor: product.stock <= 0 ? "gray" : "#28a745",
                   color: "white",
                   border: "none",
                   borderRadius: "6px",
-                  cursor:
-                    product.stock <= 0 ? "not-allowed" : "pointer",
+                  cursor: product.stock <= 0 ? "not-allowed" : "pointer",
                 }}
               >
                 {product.stock > 0 ? "Buy Now" : "Out of Stock"}
@@ -264,7 +310,7 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
         <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
           {categoryProducts.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               style={{
                 position: "relative",
                 border: "1px solid #ccc",
@@ -274,12 +320,8 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
                 textAlign: "center",
                 transition: "transform 0.2s ease",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.05)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
               <span
                 style={{
@@ -291,7 +333,7 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
               >
                 <img
                   src={
-                    favorites.find((fav) => fav.id === item.id)
+                    favorites.find((fav) => fav._id === item._id)
                       ? "/red-heart.png"
                       : "/heart.jpg"
                   }
@@ -302,18 +344,13 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
                 />
               </span>
               <Link
-                to={`/product/${item.id}`}
+                to={`/product/${item._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  width="100px"
-                  height="100px"
-                />
+                <img src={item.image} alt={item.name} width="100px" height="100px" />
                 <h4>{item.name}</h4>
-                <p>Price:₹{item.price}</p>
-                <p>Quantity:{item.stock}</p>
+                <p>Price: ₹{item.price}</p>
+                <p>Quantity: {item.stock}</p>
               </Link>
               <button
                 onClick={() => toggleCart(item)}
@@ -326,7 +363,7 @@ function ProductDetails({ cart, setCart, favorites, setFavorites }) {
                   borderRadius: "5px",
                 }}
               >
-                {cart.find((p) => p.id === item.id) ? "Remove" : "Add to Cart"}
+                {cart.find((p) => p._id === item._id) ? "Remove" : "Add to Cart"}
               </button>
             </div>
           ))}
