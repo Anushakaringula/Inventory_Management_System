@@ -159,6 +159,7 @@ import React, { useEffect, useState } from "react";
 function Favorites({ favorites, setFavorites }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [allProducts, setAllProducts] = useState([]);
+  
 
   // Fetch all grocery products
   useEffect(() => {

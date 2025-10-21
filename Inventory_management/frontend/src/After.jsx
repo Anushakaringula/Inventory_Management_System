@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import Favorites from "./Customer/Favorites";
 import Product from "./Customer/Product";
 import Boss from "./Admin/Boss";
+import Orders from "./Customer/Order"; 
 
 function After({ user, setUser }) {
   const [cart, setCart] = useState([]);
@@ -43,6 +44,7 @@ function After({ user, setUser }) {
           }
         />
         <Route path="/boss" element={<Boss/>} />
+         <Route path="/orders" element={<Orders />} />
       </Routes>
     </>
   );

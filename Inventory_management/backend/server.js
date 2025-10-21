@@ -554,3 +554,44 @@ app.get("/api/users/:userId/favourites", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
+app.put("/api/users/orders/:productId", async (req, res) => {
+  const { userId, quantity } = req.body;
+  const { productId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    const product = await Grocery.findById(productId);
+
+    if (!user || !product) return res.status(404).json({ message: "User or Product not found" });
+
+    const orderItem = {
+      productId,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity,
+      date: new Date(),
+      status: "Placed",
+    };
+
+    user.orders.push(orderItem);
+    await user.save();
+
+    res.status(200).json({ orders: user.orders });
+  } catch (err) {
+    res.status(500).json({ message: "Server error adding order" });
+  }
+});
+
+app.get("/api/users/:userId/orders", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json({ orders: user.orders });
+  } catch (err) {
+    res.status(500).json({ message: "Server error fetching orders" });
+  }
+});

@@ -102,7 +102,9 @@ export default function Navbar({ user, setUser }) {
 
       {menuOpen && (
         <div style={{ position: "absolute", top: 90, left: 10, width: 200, background: "#fafafaf8", boxShadow: "2px 0 6px rgba(0,0,0,0.1)", padding: 10, zIndex: 2 }}>
-          <p>Your Orders</p>
+          <Link to="/orders" style={{ textDecoration: "none", color: "black" }}>
+            <p style={{ margin: "10px 0" }}>Your Orders</p>
+          </Link>
           <Link to="/favorites" style={{ textDecoration: "none", color: "inherit" }}>
             <p style={{ marginTop: -2, fontSize: 14 }}>Favorites</p>
           </Link>
