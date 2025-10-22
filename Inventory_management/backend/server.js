@@ -358,6 +358,7 @@ const grocerySchema = new mongoose.Schema({
   supplier: { type: String, default: "-" },
   image: String,
   initial_quantity: { type: Number, default: 0 },
+  barcode: { type: String, unique: true, required: true } 
 });
 
 const Grocery = mongoose.model("Grocery", grocerySchema, "grocery");
@@ -743,5 +744,46 @@ app.get("/api/users/:userId/orders", async (req, res) => {
     res.json({ orders: user.orders });
   } catch (err) {
     res.status(500).json({ message: "Server error fetching orders" });
+  }
+});
+
+
+
+
+// GET product by barcode (safe, no conflict)
+app.get("/api/grocery/barcode/:barcode", async (req, res) => {
+  try {
+    const { barcode } = req.params;
+    const product = await Grocery.findOne({ barcode });
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    res.json(product);
+  } catch (err) {
+    console.error("Error fetching product by barcode:", err);
+    res.status(500).json({ message: "Server error fetching product" });
+  }
+});
+
+// PUT decrease stock by barcode
+app.put("/api/grocery/barcode/:barcode/decrease", async (req, res) => {
+  try {
+    const { barcode } = req.params;
+    const quantity = parseInt(req.body.quantity || 1, 10);
+
+    const updated = await Grocery.findOneAndUpdate(
+      { barcode, stock: { $gte: quantity } },
+      { $inc: { stock: -quantity } },
+      { new: true }
+    );
+
+    if (!updated) return res.status(400).json({ message: "Product not found or insufficient stock" });
+
+    res.json({
+      message: "Stock updated successfully",
+      productName: updated.name,
+      remainingStock: updated.stock,
+    });
+  } catch (err) {
+    console.error("Error decreasing stock by barcode:", err);
+    res.status(500).json({ message: "Server error updating stock" });
   }
 });

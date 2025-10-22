@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Dashboard from "./Dashboard";
 import ProductManager from "./ProductManager";
 import Orders from "./orders";
+import Billing from "./Billing";
 
 const adminStyles = `
 /* General Layout */
@@ -87,7 +88,7 @@ const Admin = () => {
     { id: "dashboard", label: "Dashboard", icon: "fa-dashboard" },
     { id: "products", label: "Products", icon: "fa-products" },
     { id: "orders", label: "Orders", icon: "fa-orders" },
-    { id: "analytics", label: "Analytics", icon: "fa-analytics" },
+    { id: "billing", label: "Billing", icon: "fa-analytics" },
   ];
 
   const handleNavClick = (page) => {
@@ -107,8 +108,8 @@ const Admin = () => {
         return <ProductManager />;
       case "orders":
         return <Orders/>
-      case "analytics":
-        return <h1>Analytics Page (Coming Soon)</h1>;
+      case "billing":
+        return <Billing/>;
       default:
         return <Dashboard />;
     }
