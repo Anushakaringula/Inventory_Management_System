@@ -1,307 +1,394 @@
 import React, { useState, useEffect } from 'react';
+
 const dashboardStyles = `
-    /* Base Styles */
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f7f6;
-    }
-    .app-container {
-        display: flex;
-        min-height: 100vh;
-    }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+  }
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+  }
 
-    
-    
-    /* Main Content Area Styles (Right Side) */
-    .main-content {
-        margin-left: 250px; /* Offset for fixed sidebar */
-        padding: 30px;
-        flex-grow: 1;
-        width: calc(100% - 250px);
-    }
+  .main-content {
+    margin-left: 250px;
+    padding: 30px;
+    flex-grow: 1;
+    width: calc(100% - 250px);
+  }
 
-    h1 {
-        color: #333;
-        margin-bottom: 30px;
-    }
+  h1 {
+    color: #333;
+    margin-bottom: 30px;
+  }
 
-    /* Stats Card Section */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
-    }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
 
-    .stat-card {
-        background-color: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        text-align: center;
-    }
+  .stat-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
 
-    .stat-card .icon {
-        font-size: 2.5em;
-        color: #3498db;
-        margin-bottom: 10px;
-    }
+  .stat-card .icon {
+    font-size: 2.5em;
+    color: #3498db;
+    margin-bottom: 10px;
+  }
 
-    .stat-card .value {
-        font-size: 2.2em;
-        font-weight: bold;
-        color: #2c3e50;
-    }
+  .stat-card .value {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #2c3e50;
+  }
 
-    .stat-card .label {
-        font-size: 0.9em;
-        color: #7f8c8d;
-        margin-top: 5px;
-    }
+  .stat-card .label {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-top: 5px;
+  }
 
-    .stat-card .trend {
-        font-size: 0.8em;
-        color: #2ecc71; /* Green for positive trend */
-        margin-top: 5px;
-    }
+  .stat-card .trend {
+    font-size: 0.8em;
+    margin-top: 5px;
+  }
 
-    /* Analytics and Actions Grid */
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr; /* 2/3 for chart, 1/3 for alerts */
-        gap: 20px;
-        margin-bottom: 30px;
-    }
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
 
-    /* Chart/Graph Area */
-    .chart-container {
-        background-color: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    }
+  .chart-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
 
-    .chart-title {
-        font-size: 1.2em;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 15px;
-    }
+  .chart-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
 
-    /* Stock Alerts */
-    .stock-alerts {
-        /* No extra padding needed, using .chart-container padding */
-    }
+  .alert-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
 
-    .alert-item {
-        margin-bottom: 10px;
-        padding: 10px;
-        border-radius: 4px;
-    }
+  .low-stock {
+    background-color: #fceceb;
+    color: #e74c3c;
+    border-left: 4px solid #e74c3c;
+  }
 
-    .low-stock {
-        background-color: #fceceb;
-        color: #e74c3c;
-        border-left: 4px solid #e74c3c;
-    }
+  .out-of-stock {
+    background-color: #fadbd8;
+    color: #c0392b;
+    border-left: 4px solid #c0392b;
+  }
 
-    .new-arrival {
-        background-color: #e8f9e9;
-        color: #2ecc71;
-        border-left: 4px solid #2ecc71;
-    }
+  .expiring-soon {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+  }
 
-    /* Simple Chart CSS */
-    .bar-chart {
-        display: flex;
-        align-items: flex-end;
-        height: 200px;
-        gap: 5px;
-        border-left: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-        padding: 10px 0;
-    }
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    height: 200px;
+    gap: 8px;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+  }
 
-    .bar-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 12%;
-        position: relative;
-    }
+  .bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+  }
 
-    .bar {
-        width: 80%;
-        background-color: #3498db;
-        transition: height 0.5s;
-        position: relative;
-    }
+  .bar {
+    width: 80%;
+    background-color: #3498db;
+    transition: height 0.5s;
+    position: relative;
+    border-radius: 4px 4px 0 0;
+  }
 
-    .bar.sales-bar {
-        background-color: #2ecc71; /* Green bar for sales value */
-        margin-top: -1px; /* Overlap slightly for visual grouping */
-    }
+  .bar-value {
+    position: absolute;
+    top: -20px;
+    font-size: 0.75em;
+    font-weight: bold;
+    color: #2c3e50;
+  }
 
-    .label-x {
-        margin-top: 5px;
-        font-size: 0.8em;
-        color: #7f8c8d;
-        text-align: center;
-    }
+  .label-x {
+    margin-top: 5px;
+    font-size: 0.75em;
+    color: #7f8c8d;
+    text-align: center;
+    word-wrap: break-word;
+  }
 
-    /* Icon Font Placeholder (for simplicity, using simple characters) */
-    .fa-box:before { content: '📦'; }
-    .fa-money:before { content: '💰'; }
-    .fa-cart:before { content: '🛒'; }
-    .fa-dashboard:before { content: '🏠'; }
-    .fa-products:before { content: '🛍️'; }
-    .fa-orders:before { content: '📋'; }
-    .fa-analytics:before { content: '📈'; }
+  .fa-box:before { content: '📦'; }
+  .fa-money:before { content: '💰'; }
+  .fa-alert:before { content: '⚠️'; }
+
+  .action-button {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #3498db;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .action-button:hover {
+    background-color: #2980b9;
+  }
+
+  .no-alerts {
+    text-align: center;
+    color: #95a5a6;
+    padding: 20px;
+  }
 `;
 
-// =================================================================
-// 2. Chart Data and Logic
-// =================================================================
-const salesData = [
-    { day: 'MON', value: 150, trend: 10 },
-    { day: 'TUE', value: 220, trend: 15 },
-    { day: 'WED', value: 350, trend: 22 },
-    { day: 'THU', value: 180, trend: 12 },
-    { day: 'FRI', value: 250, trend: 18 },
-    { day: 'SAT', value: 400, trend: 25 },
-    { day: 'SUN', value: 300, trend: 20 }
-];
+const CategoryChart = ({ grocery }) => {
+  const categoryData = grocery.reduce((acc, item) => {
+    const cat = item.category || 'Unknown';
+    if (!acc[cat]) {
+      acc[cat] = 0;
+    }
+    acc[cat] += Number(item.stock) || 0;
+    return acc;
+  }, {});
 
-const maxUnits = Math.max(...salesData.map(d => d.value));
+  const categories = Object.entries(categoryData)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 7);
 
-// Component for the Bar Chart
-const SalesChart = () => {
-    return (
-        <div className="bar-chart">
-            {salesData.map((item, index) => {
-                const heightPercent = (item.value / maxUnits) * 100;
-                const barHeight = heightPercent * 0.7; // Scale down for visual fit
-                const trendHeight = item.trend * 4; // Arbitrary scaling for visual effect
+  const maxStock = Math.max(...categories.map(c => c[1]), 1);
 
-                return (
-                    <div key={index} className="bar-container">
-                        {/* Bar for Sales Trend (Green) */}
-                        <div
-                            className="bar sales-bar"
-                            style={{ height: `${trendHeight}px` }}
-                        ></div>
-                        {/* Bar for Units Sold (Blue) */}
-                        <div
-                            className="bar"
-                            style={{ height: `${barHeight}px`, backgroundColor: '#3498db' }}
-                        ></div>
-                        <div className="label-x">{item.day}</div>
-                    </div>
-                );
-            })}
-        </div>
-    );
+  return (
+    <div className="bar-chart">
+      {categories.map(([category, stock], index) => {
+        const heightPercent = (stock / maxStock) * 100;
+        const barHeight = Math.max(heightPercent * 0.7, 5);
+
+        return (
+          <div key={index} className="bar-container">
+            <div className="bar-value">{stock}</div>
+            <div 
+              className="bar" 
+              style={{ 
+                height: `${barHeight}px`,
+                backgroundColor: `hsl(${210 + index * 30}, 70%, 50%)`
+              }}
+            ></div>
+            <div className="label-x">{category}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
-// =================================================================
-// 3. Main React Component
-// =================================================================
-
 const Dashboard = () => {
-    // State to manage the active navigation item
-    const [currentPage, setCurrentPage] = useState('dashboard');
-    const [pageTitle, setPageTitle] = useState('Dashboard Overview');
+  const [grocery, setGrocery] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [previousStats, setPreviousStats] = useState(null);
 
-    const navItems = [
-        { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
-        { id: 'products', label: 'Products', icon: '🛍️' },
-        { id: 'orders', label: 'Orders', icon: '📋' },
-        { id: 'analytics', label: 'Analytics', icon: '📈' },
-    ];
+  useEffect(() => {
+    fetchGroceryData();
+  }, []);
 
-    // Function to handle navigation click
-    const handleNavClick = (pageId) => {
-        setCurrentPage(pageId);
-        // Simulate changing the page title
-        setPageTitle(pageId.charAt(0).toUpperCase() + pageId.slice(1) + ' Overview');
-        console.log(`Navigating to ${pageId} page...`);
-        // In a real application, you would render the corresponding component here.
-    };
+  const fetchGroceryData = () => {
+    fetch("http://localhost:4000/api/grocery")
+      .then(res => res.json())
+      .then(data => {
+        setGrocery(data);
+        setLoading(false);
+        
+        if (!previousStats) {
+          setPreviousStats({
+            totalProducts: data.length,
+            totalStockValue: calculateTotalValue(data),
+            lowStockCount: getLowStockItems(data).length
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching products:", err);
+        setLoading(false);
+      });
+  };
+
+  const calculateTotalValue = (items) => {
+    return items.reduce((sum, item) => {
+      const stock = Number(item.stock) || 0;
+      const price = Number(item.price) || 0;
+      return sum + stock * price;
+    }, 0);
+  };
+
+  const getLowStockItems = (items) => {
+    return items.filter(item => {
+      const stock = Number(item.stock) || 0;
+      const initialQty = Number(item.initial_quantity) || 100;
+      return stock > 0 && stock < initialQty * 0.3;
+    });
+  };
+
+  const getOutOfStockItems = (items) => {
+    return items.filter(item => Number(item.stock) === 0);
+  };
+
+  const getExpiringSoonItems = (items) => {
+    const today = new Date();
+    const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
     
-    // Set body class for correct layout on mount
-    useEffect(() => {
-        document.body.className = 'app-container';
-    }, []);
+    return items.filter(item => {
+      if (!item.expiry_date) return false;
+      const expiryDate = new Date(item.expiry_date);
+      return expiryDate > today && expiryDate <= thirtyDaysFromNow;
+    });
+  };
 
-    // Function to render the main content based on the active page (currently only rendering Dashboard)
-    const renderContent = () => {
-        // Since the original HTML only contained the Dashboard content, we render that here.
-        return (
-            <>
-                <h1>{pageTitle}</h1>
+  const calculateTrend = (current, previous) => {
+    if (!previous) return 0;
+    return ((current - previous) / previous * 100).toFixed(1);
+  };
 
-                {/* 1. Key Statistics Cards */}
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <div className="icon fa-box"></div>
-                        <div className="value">450</div>
-                        <div className="label">TOTAL PRODUCTS</div>
-                        <div className="trend" style={{ color: '#2ecc71' }}>↑ +5% from last week</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="icon fa-money"></div>
-                        <div className="value">₹ 5,80,000</div>
-                        <div className="label">CURRENT STOCK VALUE</div>
-                        <div className="trend" style={{ color: '#e74c3c' }}>↓ -2% from last week</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="icon fa-cart"></div>
-                        <div className="value">12</div>
-                        <div className="label">PENDING ORDERS</div>
-                        <div className="trend" style={{ color: '#2ecc71' }}>↑ +15% from last week</div>
-                    </div>
-                </div>
-
-                <div className="dashboard-grid">
-                    {/* Weekly Sales Trend (Graphical Representation) */}
-                    <div className="chart-container">
-                        <div className="chart-title">WEEKLY SALES TREND (Units Sold)</div>
-                        <SalesChart />
-                        <p style={{ fontSize: '0.8em', color: '#7f8c8d', textAlign: 'center', marginTop: '15px' }}>Green means more sales! Up trend is good.</p>
-                    </div>
-
-                    {/* Stock Alerts */}
-                    <div className="chart-container stock-alerts">
-                        <div className="chart-title" style={{ marginBottom: '20px' }}>STOCK ALERTS</div>
-                        <div className="alert-item low-stock">
-                            <strong>LOW STOCK:</strong> Atta (5), Sugar (10), Dal (8)
-                        </div>
-                        <div className="alert-item new-arrival">
-                            <strong>NEW ARRIVALS:</strong> Rice (50), Oil (20)
-                        </div>
-                        <button style={{ marginTop: '15px', width: '100%', backgroundColor: '#95a5a6', border: 'none', color: 'white', padding: '10px', borderRadius: '4px', cursor: 'pointer' }}>VIEW ALL PRODUCTS</button>
-                    </div>
-                </div>
-            </>
-        );
-    };
-
+  if (loading) {
     return (
-        <div className="app-container">
-            {/* Injecting CSS into the DOM */}
-            <style dangerouslySetInnerHTML={{ __html: dashboardStyles }} />
-
-            {/* Left Sidebar for Navigation */}
-            
-
-            {/* Right Main Content Area */}
-            <div className="main-content" id="mainContent">
-                {renderContent()}
-            </div>
+      <div className="app-container">
+        <style dangerouslySetInnerHTML={{ __html: dashboardStyles }} />
+        <div className="main-content">
+          <h1>Loading Dashboard...</h1>
         </div>
+      </div>
     );
+  }
+
+  const totalProducts = grocery.length;
+  const totalStockValue = calculateTotalValue(grocery);
+  const lowStockItems = getLowStockItems(grocery);
+  const outOfStockItems = getOutOfStockItems(grocery);
+  const expiringSoonItems = getExpiringSoonItems(grocery);
+  
+  const productTrend = previousStats ? calculateTrend(totalProducts, previousStats.totalProducts) : 0;
+  const valueTrend = previousStats ? calculateTrend(totalStockValue, previousStats.totalStockValue) : 0;
+  const alertTrend = previousStats ? calculateTrend(lowStockItems.length, previousStats.lowStockCount) : 0;
+
+  return (
+    <div className="app-container">
+      <style dangerouslySetInnerHTML={{ __html: dashboardStyles }} />
+      <div className="main-content">
+        <h1>Dashboard Overview</h1>
+
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="icon fa-box"></div>
+            <div className="value">{totalProducts}</div>
+            <div className="label">TOTAL PRODUCTS</div>
+            <div className="trend" style={{ color: productTrend >= 0 ? '#2ecc71' : '#e74c3c' }}>
+              {productTrend >= 0 ? '↑' : '↓'} {Math.abs(productTrend)}% from last update
+            </div>
+          </div>
+          
+          <div className="stat-card">
+            <div className="icon fa-money"></div>
+            <div className="value">₹ {totalStockValue.toLocaleString()}</div>
+            <div className="label">CURRENT STOCK VALUE</div>
+            <div className="trend" style={{ color: valueTrend >= 0 ? '#2ecc71' : '#e74c3c' }}>
+              {valueTrend >= 0 ? '↑' : '↓'} {Math.abs(valueTrend)}% from last update
+            </div>
+          </div>
+          
+          <div className="stat-card">
+            <div className="icon fa-alert"></div>
+            <div className="value">{lowStockItems.length + outOfStockItems.length}</div>
+            <div className="label">STOCK ALERTS</div>
+            <div className="trend" style={{ color: alertTrend <= 0 ? '#2ecc71' : '#e74c3c' }}>
+              {alertTrend <= 0 ? '↓' : '↑'} {Math.abs(alertTrend)}% from last update
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-grid">
+          <div className="chart-container">
+            <div className="chart-title">STOCK BY CATEGORY</div>
+            <CategoryChart grocery={grocery} />
+            <p style={{ fontSize: '0.8em', color: '#7f8c8d', textAlign: 'center', marginTop: '15px' }}>
+              Stock distribution across different product categories
+            </p>
+          </div>
+
+          <div className="chart-container">
+            <div className="chart-title" style={{ marginBottom: '20px' }}>STOCK ALERTS</div>
+            
+            {outOfStockItems.length === 0 && lowStockItems.length === 0 && expiringSoonItems.length === 0 ? (
+              <div className="no-alerts">✅ No alerts at the moment!</div>
+            ) : (
+              <>
+                {outOfStockItems.length > 0 && (
+                  <div className="alert-item out-of-stock">
+                    <strong>OUT OF STOCK ({outOfStockItems.length}):</strong><br />
+                    {outOfStockItems.slice(0, 3).map(item => item.name).join(', ')}
+                    {outOfStockItems.length > 3 && ` +${outOfStockItems.length - 3} more`}
+                  </div>
+                )}
+                
+                {lowStockItems.length > 0 && (
+                  <div className="alert-item low-stock">
+                    <strong>LOW STOCK ({lowStockItems.length}):</strong><br />
+                    {lowStockItems.slice(0, 3).map(item => `${item.name} (${item.stock})`).join(', ')}
+                    {lowStockItems.length > 3 && ` +${lowStockItems.length - 3} more`}
+                  </div>
+                )}
+                
+                {expiringSoonItems.length > 0 && (
+                  <div className="alert-item expiring-soon">
+                    <strong>EXPIRING SOON ({expiringSoonItems.length}):</strong><br />
+                    {expiringSoonItems.slice(0, 3).map(item => item.name).join(', ')}
+                    {expiringSoonItems.length > 3 && ` +${expiringSoonItems.length - 3} more`}
+                  </div>
+                )}
+              </>
+            )}
+            
+            <button className="action-button" onClick={fetchGroceryData}>
+              REFRESH DATA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;
