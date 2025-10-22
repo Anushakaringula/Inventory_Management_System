@@ -595,3 +595,153 @@ app.get("/api/users/:userId/orders", async (req, res) => {
     res.status(500).json({ message: "Server error fetching orders" });
   }
 });
+
+const orderSchema = new mongoose.Schema({
+  productId: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  customerName: { type: String, required: true },
+  address: { type: String, required: true },
+  contact: { type: String, required: true },
+  status: { type: String, default: "Placed" },
+  date: { type: Date, default: Date.now },
+  totalPrice: { type: Number, required: true },
+  email: { type: String, required: true }
+});
+
+const Order = mongoose.model("Order", orderSchema, "orders");
+
+app.post("/api/orders", async (req, res) => {
+  const { productId, quantity, customerName, address, contact, email, totalPrice } = req.body;
+
+  // Validation
+  if (!productId || !quantity || !customerName || !address || !contact || !email || !totalPrice) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const newOrder = new Order({
+      productId,
+      quantity,
+      customerName,
+      address,
+      contact,
+      status: "Placed",
+      date: new Date(),
+      totalPrice,
+      email
+    });
+
+    const savedOrder = await newOrder.save();
+    res.status(201).json({ message: "Order placed successfully", order: savedOrder });
+  } catch (err) {
+    console.error("Error creating order:", err);
+    res.status(500).json({ message: "Server error creating order" });
+  }
+});
+
+// GET /api/orders - Get all orders
+app.get("/api/orders", async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ date: -1 });
+    res.status(200).json({ orders });
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    res.status(500).json({ message: "Server error fetching orders" });
+  }
+});
+
+// GET /api/orders/:orderId - Get single order by ID
+app.get("/api/orders/:orderId", async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.orderId);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.status(200).json({ order });
+  } catch (err) {
+    console.error("Error fetching order:", err);
+    res.status(500).json({ message: "Server error fetching order" });
+  }
+});
+
+// GET /api/orders/email/:email - Get orders by customer email
+app.get("/api/orders/email/:email", async (req, res) => {
+  try {
+    const orders = await Order.find({ email: req.params.email }).sort({ date: -1 });
+    res.status(200).json({ orders });
+  } catch (err) {
+    console.error("Error fetching orders by email:", err);
+    res.status(500).json({ message: "Server error fetching orders" });
+  }
+});
+
+// PUT /api/orders/:orderId - Update order status
+app.put("/api/orders/:orderId", async (req, res) => {
+  const { status } = req.body;
+
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.orderId,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedOrder) return res.status(404).json({ message: "Order not found" });
+    res.status(200).json({ message: "Order updated successfully", order: updatedOrder });
+  } catch (err) {
+    console.error("Error updating order:", err);
+    res.status(500).json({ message: "Server error updating order" });
+  }
+});
+
+// DELETE /api/orders/:orderId - Delete an order
+app.delete("/api/orders/:orderId", async (req, res) => {
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(req.params.orderId);
+    if (!deletedOrder) return res.status(404).json({ message: "Order not found" });
+    res.status(200).json({ message: "Order deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting order:", err);
+    res.status(500).json({ message: "Server error deleting order" });
+  }
+});
+
+// ==========================
+// OLD: User Orders Routes (keeping for backward compatibility)
+// ==========================
+app.put("/api/users/orders/:productId", async (req, res) => {
+  const { userId, quantity } = req.body;
+  const { productId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    const product = await Grocery.findById(productId);
+
+    if (!user || !product) return res.status(404).json({ message: "User or Product not found" });
+
+    const orderItem = {
+      productId,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity,
+      date: new Date(),
+      status: "Placed",
+    };
+
+    user.orders.push(orderItem);
+    await user.save();
+
+    res.status(200).json({ orders: user.orders });
+  } catch (err) {
+    res.status(500).json({ message: "Server error adding order" });
+  }
+});
+
+app.get("/api/users/:userId/orders", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json({ orders: user.orders });
+  } catch (err) {
+    res.status(500).json({ message: "Server error fetching orders" });
+  }
+});

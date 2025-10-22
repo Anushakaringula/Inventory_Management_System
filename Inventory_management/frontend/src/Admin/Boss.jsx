@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Dashboard from "./Dashboard";
 import ProductManager from "./ProductManager";
+import Orders from "./orders";
 
 const adminStyles = `
 /* General Layout */
@@ -105,7 +106,7 @@ const Admin = () => {
       case "products":
         return <ProductManager />;
       case "orders":
-        return <h1>Orders Page (Coming Soon)</h1>;
+        return <Orders/>
       case "analytics":
         return <h1>Analytics Page (Coming Soon)</h1>;
       default:
