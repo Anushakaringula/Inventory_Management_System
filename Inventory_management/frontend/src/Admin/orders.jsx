@@ -3,30 +3,26 @@ import React, { useEffect, useState } from "react";
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [updatingOrderId, setUpdatingOrderId] = useState(null);
   const [removingOrderId, setRemovingOrderId] = useState(null);
-  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
     fetchOrdersWithProducts();
   }, []);
 
   const fetchOrdersWithProducts = async () => {
     try {
-      // Fetch orders from the orders collection based on user email
-      const ordersRes = await fetch(`http://localhost:4000/api/orders/email/${user.email}`);
+      // Fetch ALL orders from the orders collection (no email filter for admin)
+      const ordersRes = await fetch(`http://localhost:4000/api/orders`);
       const ordersData = await ordersRes.json();
-      const userOrders = ordersData.orders || [];
+      const allOrders = ordersData.orders || [];
 
       // Fetch all products
       const productsRes = await fetch(`http://localhost:4000/api/grocery`);
       const productsData = await productsRes.json();
 
       // Map orders with product details
-      const ordersWithProducts = userOrders.map(order => {
+      const ordersWithProducts = allOrders.map(order => {
         const product = productsData.find(p => p._id === order.productId);
         return {
           ...order,
@@ -41,6 +37,34 @@ function Orders() {
       console.error("Error fetching orders:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    setUpdatingOrderId(orderId);
+    try {
+      const res = await fetch(`http://localhost:4000/api/orders/${orderId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (res.ok) {
+        // Update order status in state
+        setOrders(orders.map(order => 
+          order._id === orderId ? { ...order, status: newStatus } : order
+        ));
+        alert("Order status updated successfully!");
+      } else {
+        alert("Failed to update order status");
+      }
+    } catch (err) {
+      console.error("Error updating order status:", err);
+      alert("Error updating order status");
+    } finally {
+      setUpdatingOrderId(null);
     }
   };
 
@@ -70,36 +94,54 @@ function Orders() {
     }
   };
 
-  if (!user) {
-    return (
-      <div style={{ textAlign: "center", padding: "50px" }}>
-        <h3>Please login to view your orders.</h3>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
-        <p>Loading orders...</p>
+        <p style={{ fontSize: "18px" }}>Loading orders...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
-      <h2 style={{ marginBottom: "20px" }}>Your Orders</h2>
+    <div style={{ padding: "20px", maxWidth: "1400px", margin: "0 auto" }}>
+      <h2 style={{ marginBottom: "20px", color: "#2c3e50" }}>All Customer Orders</h2>
       
       {orders.length === 0 ? (
         <div style={{ textAlign: "center", padding: "40px" }}>
           <p style={{ fontSize: "18px", color: "#666" }}>No orders found.</p>
-          <p style={{ color: "#999" }}>Your order history will appear here.</p>
+          <p style={{ color: "#999" }}>Orders will appear here once customers place them.</p>
         </div>
       ) : (
         <>
-          <p style={{ marginBottom: "20px", color: "#666" }}>
-            Total Orders: <strong>{orders.length}</strong>
-          </p>
+          <div style={{ 
+            marginBottom: "20px", 
+            padding: "15px", 
+            backgroundColor: "#e8f5e9", 
+            borderRadius: "8px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
+            <p style={{ margin: 0, color: "#2e7d32", fontSize: "16px" }}>
+              <strong>Total Orders:</strong> {orders.length}
+            </p>
+            <button
+              onClick={fetchOrdersWithProducts}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#2e7d32",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "bold"
+              }}
+            >
+              Refresh Orders
+            </button>
+          </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             {orders.map((order) => (
               <div
@@ -113,7 +155,8 @@ function Orders() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  gap: "20px"
+                  gap: "20px",
+                  flexWrap: "wrap"
                 }}
               >
                 {/* Product Image */}
@@ -168,27 +211,56 @@ function Orders() {
                   </div>
                 </div>
 
-                {/* Order Info */}
-                <div style={{ minWidth: "150px" }}>
+                {/* Customer Details */}
+                <div style={{ flex: 1, minWidth: "200px" }}>
+                  <h4 style={{ margin: "0 0 10px 0", color: "#333", fontSize: "16px" }}>
+                    Customer Details
+                  </h4>
+                  <div style={{ display: "grid", gap: "6px", fontSize: "13px", color: "#555" }}>
+                    <p style={{ margin: 0 }}>
+                      <strong>Name:</strong> {order.customerName}
+                    </p>
+                    <p style={{ margin: 0 }}>
+                      <strong>Email:</strong> {order.email}
+                    </p>
+                    <p style={{ margin: 0 }}>
+                      <strong>Contact:</strong> {order.contact}
+                    </p>
+                    <p style={{ margin: 0 }}>
+                      <strong>Address:</strong> {order.address}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Order Info & Status */}
+                <div style={{ minWidth: "180px" }}>
                   <div style={{ display: "grid", gap: "8px", fontSize: "13px", color: "#666" }}>
                     <p style={{ margin: 0 }}>
                       <strong>Order Date:</strong><br />
                       {new Date(order.date).toLocaleDateString("en-IN", {
                         day: "numeric",
                         month: "short",
-                        year: "numeric"
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
                       })}
                     </p>
-                    <p style={{ margin: 0 }}>
-                      <strong>Status:</strong>
+                    <p style={{ margin: "8px 0 4px 0" }}>
+                      <strong>Update Status:</strong>
                     </p>
-                    <span
+                    
+                    {/* Status Dropdown */}
+                    <select
+                      value={order.status}
+                      onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
+                      disabled={updatingOrderId === order._id}
                       style={{
-                        padding: "6px 12px",
+                        padding: "8px 12px",
                         borderRadius: "5px",
+                        border: "2px solid #ddd",
                         fontSize: "13px",
                         fontWeight: "bold",
-                        textAlign: "center",
+                        cursor: updatingOrderId === order._id ? "not-allowed" : "pointer",
                         backgroundColor:
                           order.status === "Placed"
                             ? "#e3f2fd"
@@ -207,8 +279,17 @@ function Orders() {
                             : "#d32f2f",
                       }}
                     >
-                      {order.status}
-                    </span>
+                      <option value="Placed">Placed</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                    
+                    {updatingOrderId === order._id && (
+                      <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#666" }}>
+                        Updating...
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -240,7 +321,7 @@ function Orders() {
                       }
                     }}
                   >
-                    {removingOrderId === order._id ? "Removing..." : "Remove"}
+                    {removingOrderId === order._id ? "Removing..." : "Remove Order"}
                   </button>
                 </div>
               </div>
