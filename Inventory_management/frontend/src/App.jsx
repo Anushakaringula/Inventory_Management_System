@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Before from "./Before";
 import After from "./After";
+import Admin from "./Admin";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -13,8 +14,13 @@ function App() {
   return (
     <>
       {user ? (
+        user.email=== "user@gmail.com"?(
+          <Admin user={user} setUser={setUser}/>
+        ):(
         <After user={user} setUser={setUser} />
-      ) : (
+      ) ): (
+
+
         <Before setUser={setUser} />
       )}
     </>

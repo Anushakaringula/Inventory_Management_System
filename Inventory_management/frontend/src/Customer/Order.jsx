@@ -237,34 +237,36 @@ function Orders() {
   }, []);
 
   const fetchOrdersWithProducts = async () => {
-    try {
-      // Fetch orders from the orders collection based on user email
-      const ordersRes = await fetch(`http://localhost:4000/api/orders/`);
-      const ordersData = await ordersRes.json();
-      const userOrders = ordersData.orders || [];
+  try {
+    const ordersRes = await fetch(`http://localhost:4000/api/orders/`);
+    const ordersData = await ordersRes.json();
 
-      // Fetch all products
-      const productsRes = await fetch(`http://localhost:4000/api/grocery`);
-      const productsData = await productsRes.json();
+    // ✅ Filter only logged-in user's orders
+    const userOrders = (ordersData.orders || []).filter(
+      (order) => order.email === user.email
+    );
 
-      // Map orders with product details
-      const ordersWithProducts = userOrders.map(order => {
-        const product = productsData.find(p => p._id === order.productId);
-        return {
-          ...order,
-          productName: product?.name || "Product Not Found",
-          productImage: product?.image || "",
-          productPrice: product?.price || 0
-        };
-      });
+    const productsRes = await fetch(`http://localhost:4000/api/grocery`);
+    const productsData = await productsRes.json();
 
-      setOrders(ordersWithProducts);
-    } catch (err) {
-      console.error("Error fetching orders:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const ordersWithProducts = userOrders.map(order => {
+      const product = productsData.find(p => p._id === order.productId);
+      return {
+        ...order,
+        productName: product?.name || "Product Not Found",
+        productImage: product?.image || "",
+        productPrice: product?.price || 0
+      };
+    });
+
+    setOrders(ordersWithProducts);
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleRemoveOrder = async (orderId) => {
     if (!window.confirm("Are you sure you want to remove this order?")) {
@@ -282,7 +284,7 @@ function Orders() {
         setOrders(orders.filter(order => order._id !== orderId));
         alert("Order removed successfully!");
       } else {
-        alert("Failed to remove order");
+        alert("Failed to remove \order");
       }
     } catch (err) {
       console.error("Error removing order:", err);

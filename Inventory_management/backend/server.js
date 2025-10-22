@@ -787,3 +787,15 @@ app.put("/api/grocery/barcode/:barcode/decrease", async (req, res) => {
     res.status(500).json({ message: "Server error updating stock" });
   }
 });
+
+
+// Example route: GET /api/orders/:email
+app.get("/api/orders/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const orders = await Order.find({ email }); // fetch only user's orders
+    res.json({ orders });
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching orders" });
+  }
+});
