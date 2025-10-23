@@ -238,7 +238,8 @@ const ProductManager = () => {
     supplier: "",
     image: "",
     expiry_date: "",
-    initial_quantity:""
+    initial_quantity:"",
+    barcode:""
   });
 
   // Fetch existing products
@@ -318,7 +319,8 @@ const ProductManager = () => {
         supplier: "",
         image: "",
         expiry_date: "",
-        initial_quantity:""
+        initial_quantity:"",
+        barcode:""
       });
     } catch (err) {
       console.error("Error saving product:", err);
@@ -413,7 +415,8 @@ const ProductManager = () => {
                 "stock",
                 "supplier",
                 "expiry_date",
-                "initial_quantity"
+                "initial_quantity",
+                "barcode"
               ].map((field) => (
                 <div className="form-group" key={field}>
                   <label>{field.replace("_", " ").toUpperCase()}</label>

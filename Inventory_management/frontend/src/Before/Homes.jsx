@@ -37,7 +37,7 @@ function Home() {
           marginBottom: "20px",
           textAlign: "center"
         }}>
-          Shop by Category
+          Live Data. Limitless Control
         </h2>
         <div style={{
           display: "flex",

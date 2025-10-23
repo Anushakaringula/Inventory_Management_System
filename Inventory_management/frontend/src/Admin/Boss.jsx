@@ -40,7 +40,7 @@ body {
   text-align: center;
   font-size: 1.6em;
   font-weight: bold;
-  padding: 20px 10px;
+  padding: 20px 10cpx;
   border-bottom: 1px solid rgba(255,255,255,0.2);
   margin-bottom: 20px;
   letter-spacing: 1px;
@@ -53,20 +53,24 @@ body {
   gap: 12px;
   font-size: 1.2em;
   cursor: pointer;
-  color: #ecf0f1;
+  color: #030303ff;
   border-radius: 10px;
   margin: 5px 10px;
   transition: background 0.3s, transform 0.2s;
+  font-weight: bold;
 }
 
 .nav-item:hover {
   background-color: #2e5a6f; /* Hover color */
   transform: translateX(4px);
+  color: #ffffffff;
+
 }
 
 .nav-item.active {
-  background-color: #2e5a6f; /* Active color */
+  fbackground-color: #2e5a6f; /* Active color */
   font-weight: bold;
+  color: #f3eeeeff;
 }
 
 .nav-item i {
