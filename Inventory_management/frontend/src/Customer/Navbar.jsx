@@ -1,122 +1,3 @@
-// import React, { useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-
-// export default function Navbar({ user, setUser }) {
-//   const [menuOpen, setMenuOpen] = useState(false);
-//   const [userMenuOpen, setUserMenuOpen] = useState(false); // for logout dropdown
-//   const navigate = useNavigate();
-
-//   const toggleMenu = () => setMenuOpen((prev) => !prev);
-//   const toggleUserMenu = () => setUserMenuOpen((prev) => !prev);
-
-//   const handleLogout = () => {
-//     localStorage.removeItem("user");
-//     setUser(null);
-//     setUserMenuOpen(false);
-//     navigate("/"); // redirect to Before/Homes
-//   };
-
-//   return (
-//     <>
-//       <nav
-//         style={{
-//           display: "flex",
-//           justifyContent: "space-between",
-//           alignItems: "center",
-//           width: "100%",
-//           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-//           padding: "5px 5px",
-//           position: "sticky",
-//           top: 0,
-//           backgroundColor: "#fff",
-//           zIndex: 1000,
-//         }}
-//       >
-//         <img
-//           src="/burger-bar.png"
-//           alt="logo"
-//           width={25}
-//           height={25}
-//           onClick={toggleMenu}
-//           style={{ cursor: "pointer" }}
-//         />
-
-//         <div style={{ display: "flex", gap: "20px", marginRight: "10px" }}>
-//           <input
-//             type="text"
-//             placeholder="search"
-//             style={{
-//               height: 25,
-//               width: 400,
-//               border: "1px solid #ddd",
-//               padding: "8px 12px",
-//               borderRadius: 8,
-//               outline: "none",
-//               fontSize: 15,
-//               boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-//             }}
-//           />
-
-//           <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-//             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
-//               <img src="/home_icon.png" alt="home" width={25} height={25} />
-//               <p style={{ marginTop: -2, fontSize: 14 }}>Home</p>
-//             </div>
-//           </Link>
-
-//           {/* User icon */}
-//           <div style={{ position: "relative", cursor: user ? "pointer" : "default" }} onClick={user ? toggleUserMenu : null}>
-//             <img src="/userlogin.png" alt="user" width={25} height={25} />
-//             <p style={{ marginTop: -2, fontSize: 14 }}>{user ? user.name : <Link to="/login">Login</Link>}</p>
-
-//             {user && userMenuOpen && (
-//               <div
-//                 style={{
-//                   position: "absolute",
-//                   top: 40,
-//                   background: "#fff",
-//                   border: "1px solid #ccc",
-//                   borderRadius: 5,
-//                   boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-//                   padding: "5px 0",
-//                   minWidth: 120,
-//                   textAlign: "center",
-//                   zIndex: 10,
-//                 }}
-//               >
-//                 <p onClick={handleLogout} style={{ margin: 0, padding: 8, cursor: "pointer", fontWeight: "bold" }}>
-//                   Logout
-//                 </p>
-//               </div>
-//             )}
-//           </div>
-
-//           <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}>
-//             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
-//               <img src="/cart.png" alt="cart" width={25} height={25} />
-//               <p style={{ marginTop: -2, fontSize: 14 }}>Cart</p>
-//             </div>
-//           </Link>
-//         </div>
-//       </nav>
-
-//       {menuOpen && (
-//         <div style={{ position: "absolute", top: 90, left: 10, width: 200, background: "#fafafaf8", boxShadow: "2px 0 6px rgba(0,0,0,0.1)", padding: 10, zIndex: 2 }}>
-//           <Link to="/orders" style={{ textDecoration: "none", color: "black" }}>
-//             <p style={{ margin: "10px 0" }}>Your Orders</p>
-//           </Link>
-//           <Link to="/favorites" style={{ textDecoration: "none", color: "inherit" }}>
-//             <p style={{ marginTop: -2, fontSize: 14 }}>Favorites</p>
-//           </Link>
-//           <p>Settings</p>
-//           <p>Contact us</p>
-//           <p>Help</p>
-//         </div>
-//       )}
-//     </>
-//   );
-// }
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -178,53 +59,103 @@ export default function Navbar({ user, setUser }) {
     }
   };
 
+  const handleBlur = () => {
+    setTimeout(() => setShowResults(false), 200);
+  };
+
   return (
     <>
       <nav
         style={{
           display: "flex",
+          width: "100%",
           justifyContent: "space-between",
           alignItems: "center",
-          width: "100%",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          padding: "5px 5px",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+          padding: "15px 5px 15px 5px",
           position: "sticky",
           top: 0,
-          backgroundColor: "#fff",
           zIndex: 1000,
+          background: "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
         }}
       >
-        <img
-          src="/burger-bar.png"
-          alt="logo"
-          width={25}
-          height={25}
+        {/* Menu Button */}
+        <div
           onClick={toggleMenu}
-          style={{ cursor: "pointer" }}
-        />
+          style={{
+            cursor: "pointer",
+            padding: "8px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            background: "rgba(255, 255, 255, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+            e.currentTarget.style.transform = "scale(1.1)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          <img
+            src="/burger-bar.png"
+            alt="menu"
+            width="28px"
+            height="28px"
+            style={{ filter: "brightness(0) invert(1)" }}
+          />
+        </div>
 
-        <div style={{ display: "flex", gap: "20px", marginRight: "10px", position: "relative" }}>
+        {/* Right Side Navigation */}
+        <div style={{ display: "flex", gap: "30px", alignItems: "center", position: "relative" }}>
           {/* Search Bar with Dropdown */}
           <div style={{ position: "relative" }}>
             <form onSubmit={handleSearchSubmit}>
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-                onFocus={() => searchResults.length > 0 && setShowResults(true)}
-                onBlur={() => setTimeout(() => setShowResults(false), 200)}
-                style={{
-                  height: 25,
-                  width: 400,
-                  border: "1px solid #ddd",
-                  padding: "8px 12px",
-                  borderRadius: 8,
-                  outline: "none",
-                  fontSize: 15,
-                  boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-                }}
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                  onBlur={handleBlur}
+                  style={{
+                    height: "44px",
+                    width: "450px",
+                    border: "2px solid rgba(255, 255, 255, 0.2)",
+                    padding: "12px 45px 12px 20px",
+                    borderRadius: "25px",
+                    outline: "none",
+                    fontSize: "15px",
+                    background: "rgba(255, 255, 255, 0.95)",
+                    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
+                    transition: "all 0.3s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "white";
+                    e.currentTarget.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.95)";
+                    e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.1)";
+                  }}
+                />
+                <div style={{
+                  position: "absolute",
+                  right: "15px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "20px",
+                  color: "#718096",
+                  pointerEvents: "none"
+                }}>
+                  🔍
+                </div>
+              </div>
             </form>
 
             {/* Search Results Dropdown */}
@@ -232,48 +163,87 @@ export default function Navbar({ user, setUser }) {
               <div
                 style={{
                   position: "absolute",
-                  top: "100%",
+                  top: "calc(100% + 10px)",
                   left: 0,
                   width: "100%",
                   backgroundColor: "white",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  marginTop: "5px",
-                  maxHeight: "400px",
+                  border: "none",
+                  borderRadius: "16px",
+                  maxHeight: "450px",
                   overflowY: "auto",
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                  boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
                   zIndex: 1001,
                 }}
               >
-                {searchResults.map((item) => (
+                {searchResults.map((item, index) => (
                   <div
                     key={item._id}
                     onClick={() => handleResultClick(item._id)}
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "10px",
+                      padding: "15px",
                       cursor: "pointer",
-                      borderBottom: "1px solid #f0f0f0",
-                      gap: "10px",
-                      transition: "background-color 0.2s",
+                      borderBottom: index < searchResults.length - 1 ? "1px solid #f0f0f0" : "none",
+                      gap: "15px",
+                      transition: "all 0.2s ease",
+                      borderRadius: index === 0 ? "16px 16px 0 0" : index === searchResults.length - 1 ? "0 0 16px 16px" : "0"
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f5f5f5"}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#f8faf9";
+                      e.currentTarget.style.transform = "translateX(5px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "white";
+                      e.currentTarget.style.transform = "translateX(0)";
+                    }}
                   >
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      width="50"
-                      height="50"
-                      style={{ objectFit: "cover", borderRadius: "5px" }}
-                    />
+                    <div style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "8px"
+                    }}>
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        width="100%"
+                        height="100%"
+                        style={{ objectFit: "contain" }}
+                      />
+                    </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: "500", fontSize: "14px" }}>
+                      <div style={{ 
+                        fontWeight: "600", 
+                        fontSize: "15px",
+                        color: "#2d3748",
+                        marginBottom: "4px"
+                      }}>
                         {item.name}
                       </div>
-                      <div style={{ fontSize: "12px", color: "#666" }}>
-                        {item.category} • ₹{item.price}
+                      <div style={{ 
+                        fontSize: "13px", 
+                        color: "#718096",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px"
+                      }}>
+                        <span style={{
+                          background: "#f7fafc",
+                          padding: "2px 8px",
+                          borderRadius: "6px",
+                          fontSize: "12px"
+                        }}>
+                          {item.category}
+                        </span>
+                        <span style={{ fontWeight: "600", color: "#203e4fff" }}>
+                          ₹{item.price}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -286,79 +256,349 @@ export default function Navbar({ user, setUser }) {
               <div
                 style={{
                   position: "absolute",
-                  top: "100%",
+                  top: "calc(100% + 10px)",
                   left: 0,
                   width: "100%",
                   backgroundColor: "white",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  marginTop: "5px",
-                  padding: "15px",
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                  borderRadius: "16px",
+                  padding: "30px 20px",
+                  boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
                   textAlign: "center",
-                  color: "#666",
                   zIndex: 1001,
                 }}
               >
-                No products found
+                <div style={{ fontSize: "40px", marginBottom: "10px" }}>🔍</div>
+                <div style={{ color: "#2d3748", fontWeight: "600", fontSize: "16px" }}>
+                  No products found
+                </div>
+                <div style={{ color: "#718096", fontSize: "14px", marginTop: "5px" }}>
+                  Try a different search term
+                </div>
               </div>
             )}
           </div>
 
-          <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
-              <img src="/home_icon.png" alt="home" width={25} height={25} />
-              <p style={{ marginTop: -2, fontSize: 14 }}>Home</p>
+          {/* Home Link */}
+          <Link
+            to="/"
+            style={{
+              textDecoration: "none",
+              color: "white",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "8px 16px",
+              borderRadius: "12px",
+              transition: "all 0.3s ease",
+              background: "rgba(255, 255, 255, 0.1)"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.transform = "translateY(-3px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: "5px" }}>
+              <img 
+                src="/home_icon.png" 
+                alt="home" 
+                width="28px" 
+                height="28px"
+                style={{ filter: "brightness(0) invert(1)" }}
+              />
+              <p style={{ margin: "0", fontSize: "13px", fontWeight: "600" }}>Home</p>
             </div>
           </Link>
 
-          {/* User icon */}
-          <div style={{ position: "relative", cursor: user ? "pointer" : "default" }} onClick={user ? toggleUserMenu : null}>
-            <img src="/userlogin.png" alt="user" width={25} height={25} />
-            <p style={{ marginTop: -2, fontSize: 14 }}>{user ? user.name : <Link to="/login">Login</Link>}</p>
+          {/* User Menu */}
+          <div style={{ position: "relative" }}>
+            {user ? (
+              <div
+                onClick={toggleUserMenu}
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "8px 16px",
+                  borderRadius: "12px",
+                  transition: "all 0.3s ease",
+                  background: "rgba(255, 255, 255, 0.1)"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.transform = "translateY(-3px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: "5px" }}>
+                  <img 
+                    src="/userlogin.png" 
+                    alt="user" 
+                    width="28px" 
+                    height="28px"
+                    style={{ filter: "brightness(0) invert(1)" }}
+                  />
+                  <p style={{ margin: "0", fontSize: "13px", fontWeight: "600", color: "white" }}>
+                    {user.name}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                style={{
+                  textDecoration: "none",
+                  color: "white",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "8px 16px",
+                  borderRadius: "12px",
+                  transition: "all 0.3s ease",
+                  background: "rgba(255, 255, 255, 0.1)"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.transform = "translateY(-3px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: "5px" }}>
+                  <img 
+                    src="/userlogin.png" 
+                    alt="login" 
+                    width="28px" 
+                    height="28px"
+                    style={{ filter: "brightness(0) invert(1)" }}
+                  />
+                  <p style={{ margin: "0", fontSize: "13px", fontWeight: "600" }}>Login</p>
+                </div>
+              </Link>
+            )}
 
+            {/* User Dropdown Menu */}
             {user && userMenuOpen && (
               <div
                 style={{
                   position: "absolute",
-                  top: 40,
-                  background: "#fff",
-                  border: "1px solid #ccc",
-                  borderRadius: 5,
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                  padding: "5px 0",
-                  minWidth: 120,
-                  textAlign: "center",
-                  zIndex: 10,
+                  top: "calc(100% + 10px)",
+                  right: 0,
+                  minWidth: "180px",
+                  background: "white",
+                  borderRadius: "16px",
+                  boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
+                  zIndex: 1002,
+                  overflow: "hidden"
                 }}
               >
-                <p onClick={handleLogout} style={{ margin: 0, padding: 8, cursor: "pointer", fontWeight: "bold" }}>
-                  Logout
-                </p>
+                <div
+                  onClick={handleLogout}
+                  style={{
+                    padding: "16px 20px",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#f8faf9";
+                    e.currentTarget.style.paddingLeft = "25px";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "white";
+                    e.currentTarget.style.paddingLeft = "20px";
+                  }}
+                >
+                  <span style={{ fontSize: "18px" }}>🚪</span>
+                  <p style={{ margin: "0", fontSize: "15px", fontWeight: "600", color: "#2d3748" }}>
+                    Logout
+                  </p>
+                </div>
               </div>
             )}
           </div>
 
-          <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
-              <img src="/cart.png" alt="cart" width={25} height={25} />
-              <p style={{ marginTop: -2, fontSize: 14 }}>Cart</p>
+          {/* Cart Link */}
+          <Link
+            to="/cart"
+            style={{
+              textDecoration: "none",
+              color: "white",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "8px 16px",
+              borderRadius: "12px",
+              transition: "all 0.3s ease",
+              background: "rgba(255, 255, 255, 0.1)"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.transform = "translateY(-3px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: "5px" }}>
+              <img 
+                src="/cart.png" 
+                alt="cart" 
+                width="28px" 
+                height="28px"
+                style={{ filter: "brightness(0) invert(1)" }}
+              />
+              <p style={{ margin: "0", fontSize: "13px", fontWeight: "600" }}>Cart</p>
             </div>
           </Link>
         </div>
       </nav>
 
+      {/* Sidebar Menu */}
       {menuOpen && (
-        <div style={{ position: "absolute", top: 90, left: 10, width: 200, background: "#fafafaf8", boxShadow: "2px 0 6px rgba(0,0,0,0.1)", padding: 10, zIndex: 2 }}>
-          <Link to="/orders" style={{ textDecoration: "none", color: "black" }}>
-            <p style={{ margin: "10px 0" }}>Your Orders</p>
+        <div
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: "20px",
+            width: "240px",
+            background: "white",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
+            padding: "0",
+            zIndex: 2000,
+            borderRadius: "16px",
+            overflow: "hidden"
+          }}
+        >
+          <Link to="/orders" style={{ textDecoration: "none", color: "inherit" }}>
+            <div
+              style={{
+                padding: "20px",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                borderBottom: "1px solid #f0f0f0",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#f8faf9";
+                e.currentTarget.style.paddingLeft = "25px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "white";
+                e.currentTarget.style.paddingLeft = "20px";
+              }}
+            >
+              <span style={{ fontSize: "20px" }}>📦</span>
+              <p style={{ margin: "0", fontSize: "15px", fontWeight: "500", color: "#2d3748" }}>Your Orders</p>
+            </div>
           </Link>
+
           <Link to="/favorites" style={{ textDecoration: "none", color: "inherit" }}>
-            <p style={{ marginTop: -2, fontSize: 14 }}>Favorites</p>
+            <div
+              style={{
+                padding: "20px",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                borderBottom: "1px solid #f0f0f0",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#f8faf9";
+                e.currentTarget.style.paddingLeft = "25px";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "white";
+                e.currentTarget.style.paddingLeft = "20px";
+              }}
+            >
+              <span style={{ fontSize: "20px" }}>❤️</span>
+              <p style={{ margin: "0", fontSize: "15px", fontWeight: "500", color: "#2d3748" }}>Favorites</p>
+            </div>
           </Link>
-          <p>Settings</p>
-          <p>Contact us</p>
-          <p>Help</p>
+
+          <div
+            style={{
+              padding: "20px",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              borderBottom: "1px solid #f0f0f0",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#f8faf9";
+              e.currentTarget.style.paddingLeft = "25px";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white";
+              e.currentTarget.style.paddingLeft = "20px";
+            }}
+          >
+            <span style={{ fontSize: "20px" }}>⚙️</span>
+            <p style={{ margin: "0", fontSize: "15px", fontWeight: "500", color: "#2d3748" }}>Settings</p>
+          </div>
+
+          <div
+            style={{
+              padding: "20px",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              borderBottom: "1px solid #f0f0f0",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#f8faf9";
+              e.currentTarget.style.paddingLeft = "25px";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white";
+              e.currentTarget.style.paddingLeft = "20px";
+            }}
+          >
+            <span style={{ fontSize: "20px" }}>📧</span>
+            <p style={{ margin: "0", fontSize: "15px", fontWeight: "500", color: "#2d3748" }}>Contact us</p>
+          </div>
+
+          <div
+            style={{
+              padding: "20px",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#f8faf9";
+              e.currentTarget.style.paddingLeft = "25px";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white";
+              e.currentTarget.style.paddingLeft = "20px";
+            }}
+          >
+            <span style={{ fontSize: "20px" }}>❓</span>
+            <p style={{ margin: "0", fontSize: "15px", fontWeight: "500", color: "#2d3748" }}>Help</p>
+          </div>
         </div>
       )}
     </>

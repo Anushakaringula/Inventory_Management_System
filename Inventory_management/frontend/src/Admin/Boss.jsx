@@ -9,7 +9,7 @@ const adminStyles = `
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4f7f6;
 }
 
@@ -20,58 +20,73 @@ body {
 }
 
 /* Sidebar Styles */
+/* Sidebar Styles */
 .sidebar {
   width: 300px;
-  background-color: #2c3e50;
+  background: linear-gradient(180deg, #b6c4d8ff, #79877eff); /* Gradient from top to bottom */
   color: white;
   display: flex;
   flex-direction: column;
   padding-top: 20px;
   position: fixed;
   height: 100vh;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  box-shadow: 3px 0 10px rgba(0,0,0,0.1);
 }
+
 
 .sidebar .logo {
   text-align: center;
-  font-size: 1.4em;
+  font-size: 1.6em;
   font-weight: bold;
-  padding: 15px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 20px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
   margin-bottom: 20px;
+  letter-spacing: 1px;
 }
 
 .nav-item {
-  padding: 15px 25px;
+  padding: 15px 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.3em;
+  gap: 12px;
+  font-size: 1.2em;
   cursor: pointer;
   color: #ecf0f1;
-  transition: background 0.3s;
+  border-radius: 10px;
+  margin: 5px 10px;
+  transition: background 0.3s, transform 0.2s;
 }
 
-.nav-item:hover,
+.nav-item:hover {
+  background-color: #2e5a6f; /* Hover color */
+  transform: translateX(4px);
+}
+
 .nav-item.active {
-  background-color: #34495e;
+  background-color: #2e5a6f; /* Active color */
+  font-weight: bold;
 }
 
 .nav-item i {
-  font-size: 1.8em;
+  font-size: 1.4em;
 }
 
 /* Main Content */
 .main-content {
-  margin-left: 200px;       /* match your .sidebar width */
+  margin-left: 150px; /* match sidebar width */
   padding: 30px;
-  width: calc(100vw - 200px);
+  width: 100vw;
   height: 100vh;
-  overflow-y: auto;          /* scroll if content is too tall */
+  overflow-y: auto;
   overflow-x: hidden;
+  background-color: #f4f7f6;
 }
 
-h1 {
-  color: #2c3e50;
+/* Headings */
+h1, h2 {
+  color: #203a43;
 }
 
 /* Icon Placeholders */

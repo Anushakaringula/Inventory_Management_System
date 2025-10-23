@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 // =================================================================
 // CSS Styles (Embedded for simplicity)
 // =================================================================
+// =================================================================
+// CSS Styles with Gradients
+// =================================================================
 const productManagerStyles = `
 * { box-sizing: border-box; }
 
@@ -11,33 +14,59 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f7f6;
-  overflow: hidden;
 }
 
 .app-container { display: flex; height: 100vh; width: 100vw; }
 
 .main-content {
-  padding: 0px;
-  width: 80%;
+  padding: 20px;
+  width: 100%; /* full width inside container */
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
-
 
 h1 { color: #333; margin-bottom: 20px; }
 
 .product-table-container {
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  padding: 20px;
-  height: calc(100vh - 120px);
-  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  padding: 5px 10px 10px 10px;
+ height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
 }
 
+.table-btn-edit, .table-btn-remove {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s;
+  color: white;
+}
+
+/* Gradient for Edit */
+.table-btn-edit {
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  margin-right: 10px; /* Gap between buttons */
+}
+.table-btn-edit:hover {
+  background: linear-gradient(to right, #203a43, #2c5364, #0f2027);
+  transform: translateY(-2px);
+}
+
+/* Gradient for Remove */
+.table-btn-remove {
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+}
+.table-btn-remove:hover {
+  background: linear-gradient(to right, #203a43, #2c5364, #0f2027);
+  transform: translateY(-2px);
+}
 .scrollable-table-wrapper {
-  height: calc(100% - 70px);
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -45,13 +74,13 @@ h1 { color: #333; margin-bottom: 20px; }
 .product-table { width: 100%; border-collapse: collapse; }
 
 .product-table th, .product-table td {
-  padding: 15px;
+  padding: 8px 1px;
   border-bottom: 1px solid #eee;
   text-align: left;
 }
 
 .product-table th {
-  background-color: #f8f8f8;
+  background-color: #f0f0f0;
   font-weight: bold;
   color: #555;
   position: sticky;
@@ -61,47 +90,46 @@ h1 { color: #333; margin-bottom: 20px; }
 }
 
 .product-info-cell { display: flex; align-items: center; }
-.product-info-cell img { width: 60px; height: 60px; border-radius: 4px; margin-right: 15px; object-fit: cover; border: 1px solid #eee; }
+.product-info-cell img { 
+  width: 60px; 
+  height: 60px; 
+  border-radius: 6px; 
+  margin-right: 15px; 
+  object-fit: cover; 
+  border: 1px solid #eee; 
+}
 .product-info-details { display: flex; flex-direction: column; }
-.product-name { font-weight: bold; color: #333; font-size: 1.3em; }
-.product-id { font-size: 1em; color: #777; }
+.product-name { font-weight: bold; color: #333; font-size: 1.1em; }
+.product-id { font-size: 0.9em; color: #777; }
 
-.table-btn-edit, .table-btn-remove {
-  padding: 8px 12px;
+/* Buttons with gradient */
+.table-btn-edit, .table-btn-remove, .btn-add-product, .modal-form .btn-cancel, .modal-form .btn-submit {
+  padding: 10px 18px 10px 10px;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 1.2em;
-  margin-right: 5px;
-  transition: background-color 0.3s;
+  font-size: 1em;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  color: white;
+  background: linear-gradient(to right, #144a61ff, #203a43, #2c5364);
   white-space: nowrap;
 }
 
-.table-btn-edit { background-color: #3498db; color: white; }
-.table-btn-edit:hover { background-color: #2980b9; }
-.table-btn-remove { background-color: #e74c3c; color: white; }
-.table-btn-remove:hover { background-color: #c0392b; }
+.table-btn-edit:hover, .table-btn-remove:hover, .btn-add-product:hover, .modal-form .btn-cancel:hover, .modal-form .btn-submit:hover {
+  filter: brightness(1.2);
+}
 
 .bottom-actions {
   display: flex;
   justify-content: flex-start;
-  gap: 15px;
+  gap: 20px;
   padding-top: 15px;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
 }
-
-.btn-add-product {
-  padding: 12px 25px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.2em;
-  font-weight: bold;
-  transition: background-color 0.3s;
-  background-color: #2ecc71;
-  color: white;
-}
-
-.btn-add-product:hover { background-color: #27ae60; }
 
 /* Modal Form Styles */
 .modal-overlay {
@@ -119,9 +147,10 @@ h1 { color: #333; margin-bottom: 20px; }
 .modal-form {
   background-color: white;
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 400px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  max-width: 90%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
 .modal-form h2 {
@@ -146,47 +175,49 @@ h1 { color: #333; margin-bottom: 20px; }
 }
 
 .modal-form .form-group input {
-  padding: 8px 10px;
+  padding: 10px 12px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1em;
   outline: none;
   transition: border-color 0.3s;
 }
 
-.modal-form .form-group input:focus { border-color: #3498db; }
+.modal-form .form-group input:focus { border-color: #203a43; }
 
 .modal-form .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
   margin-top: 20px;
+  margin-bottom:20px;
 }
 
-.modal-form .btn-cancel {
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: #e74c3c;
-  color: white;
-  transition: background-color 0.3s;
+/* Scrollbar customization */
+.scrollable-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollable-table-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #2a4049ff, #8098a0ff, #8aa4afff);
+  border-radius: 4px;
+}
+.scrollable-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+  .bottom-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  padding: 15px 0;
+  position: sticky;
+  top: 0; /* keeps it visible at top of table container */
+  background: white;
+  z-index: 10;
 }
 
-.modal-form .btn-cancel:hover { background-color: #c0392b; }
-
-.modal-form .btn-submit {
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: #2ecc71;
-  color: white;
-  transition: background-color 0.3s;
-}
-
-.modal-form .btn-submit:hover { background-color: #27ae60; }
 `;
+
+
 
 // =================================================================
 // React Component

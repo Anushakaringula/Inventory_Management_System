@@ -367,8 +367,31 @@ function Home({ cart, setCart, favorites, setFavorites }) {
 
   if (loading || !dataLoaded) {
     return (
-      <div style={{ textAlign: "center", padding: "50px" }}>
-        <p>Loading...</p>
+      <div style={{
+        background: "linear-gradient(to bottom, #f8faf9 0%, #ffffff 100%)",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <div style={{
+          textAlign: "center",
+          padding: "40px",
+          background: "white",
+          borderRadius: "16px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+        }}>
+          <div style={{
+            width: "50px",
+            height: "50px",
+            border: "4px solid #f3f3f3",
+            borderTop: "4px solid #275659ff",
+            borderRadius: "50%",
+            margin: "0 auto 20px",
+            animation: "spin 1s linear infinite"
+          }}></div>
+          <p style={{ fontSize: "18px", color: "#2d3748", fontWeight: "600" }}>Loading...</p>
+        </div>
       </div>
     );
   }
@@ -378,65 +401,290 @@ function Home({ cart, setCart, favorites, setFavorites }) {
     : grocery;
 
   return (
-    <>
-      {/* Categories */}
-      <div style={{ display: "flex", marginBottom: "20px", marginTop: "10px", overflowX: "auto" }}>
-        {Category.map((cat) => (
+    <div style={{
+      background: "linear-gradient(to bottom, #f8faf9 0%, #ffffff 100%)",
+      minHeight: "100vh",
+      paddingBottom: "40px"
+    }}>
+      {/* Categories Section */}
+      <div style={{ padding: "0 20px", marginBottom: "40px", marginTop: "20px" }}>
+        <h2 style={{
+          fontSize: "28px",
+          fontWeight: "600",
+          color: "#2d3748",
+          marginBottom: "20px",
+          textAlign: "center"
+        }}>
+          Shop by Category
+        </h2>
+        <div style={{
+          display: "flex",
+          gap: "15px",
+          overflowX: "auto",
+          padding: "10px 0",
+          scrollbarWidth: "thin",
+          scrollbarColor: "#0f2027 #f1f1f1"
+        }}>
+          {/* All Categories Button */}
           <div
-            key={cat.id}
-            style={{ 
-              textAlign: "center", 
-              cursor: "pointer", 
-              padding: "10px", 
-              margin: "10px",
-              minWidth: "80px"
+            style={{
+              textAlign: "center",
+              cursor: "pointer",
+              padding: "15px",
+              minWidth: "100px",
+              borderRadius: "16px",
+              background: !selectedCategory 
+                ? "linear-gradient(to right, #0f2027, #203a43, #2c5364)" 
+                : "white",
+              color: !selectedCategory ? "white" : "#2d3748",
+              boxShadow: !selectedCategory 
+                ? "0 8px 20px rgba(102, 126, 234, 0.4)" 
+                : "0 4px 12px rgba(0,0,0,0.08)",
+              transform: !selectedCategory ? "translateY(-5px)" : "translateY(0)",
+              transition: "all 0.3s ease"
             }}
-            onClick={() => setSelectedCategory(cat.match)}
+            onClick={() => setSelectedCategory(null)}
+            onMouseEnter={(e) => {
+              if (selectedCategory !== null) {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.12)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (selectedCategory !== null) {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+              }
+            }}
           >
-            <div style={{ borderRadius: "50%", padding: "10px" }}>
-              <img src={cat.image} alt={cat.label} width="60px" height="60px" />
+            <div style={{
+              width: "60px",
+              height: "60px",
+              margin: "0 auto 10px",
+              borderRadius: "50%",
+              background: !selectedCategory ? "rgba(255,255,255,0.2)" : "#f7fafc",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "30px"
+            }}>
+              🛒
             </div>
-            <p>{cat.label}</p>
+            <p style={{ margin: "0", fontWeight: "600", fontSize: "14px" }}>All</p>
           </div>
-        ))}
+
+          {Category.map((cat) => {
+            const isSelected = selectedCategory && selectedCategory.includes(cat.match[0]);
+            return (
+              <div
+                key={cat.id}
+                style={{
+                  textAlign: "center",
+                  cursor: "pointer",
+                  padding: "15px",
+                  minWidth: "100px",
+                  borderRadius: "16px",
+                  background: isSelected 
+                    ? "linear-gradient(to right, #0f2027, #203a43, #2c5364)" 
+                    : "white",
+                  color: isSelected ? "white" : "#2d3748",
+                  boxShadow: isSelected 
+                    ? "0 8px 20px rgba(24, 69, 67, 0.4)" 
+                    : "0 4px 12px rgba(0,0,0,0.08)",
+                  transform: isSelected ? "translateY(-5px)" : "translateY(0)",
+                  transition: "all 0.3s ease"
+                }}
+                onClick={() => setSelectedCategory(cat.match)}
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.transform = "translateY(-5px)";
+                    e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.12)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+                  }
+                }}
+              >
+                <div style={{
+                  borderRadius: "50%",
+                  padding: "10px",
+                  background: isSelected ? "rgba(255,255,255,0.2)" : "#f7fafc"
+                }}>
+                  <img 
+                    src={cat.image} 
+                    alt={cat.label} 
+                    width="60px" 
+                    height="60px"
+                    style={{ borderRadius: "50%" }}
+                  />
+                </div>
+                <p style={{ margin: "10px 0 0 0", fontWeight: "600", fontSize: "14px" }}>
+                  {cat.label}
+                </p>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Grocery Cards */}
-      {filteredItems.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "50px" }}>
-          <p>No products available</p>
+      {/* Products Grid */}
+      <div style={{ padding: "0 20px" }}>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px"
+        }}>
+          <h2 style={{
+            fontSize: "24px",
+            fontWeight: "600",
+            color: "#2d3748",
+            margin: "0"
+          }}>
+            {selectedCategory ? "Filtered Products" : "All Products"}
+          </h2>
+          <span style={{
+            background: "#275659ff",
+            color: "white",
+            padding: "8px 16px",
+            borderRadius: "20px",
+            fontSize: "14px",
+            fontWeight: "600"
+          }}>
+            {filteredItems.length} items
+          </span>
         </div>
-      ) : (
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-evenly" }}>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+          gap: "40px",
+          padding: "10px 0"
+        }}>
           {filteredItems.map((item) => (
             <div
               key={item._id}
               style={{
-                border: "1px solid #ccc",
-                padding: "10px",
-                borderRadius: "8px",
-                margin: "5px",
-                width: "12%",
-                minWidth: "150px",
-                position: "relative",
+                background: "white",
+                borderRadius: "16px",
+                overflow: "hidden",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                position: "relative"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-8px)";
+                e.currentTarget.style.boxShadow = "0 12px 24px rgba(0,0,0,0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
               }}
             >
-              <Link to={`/product/${item._id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  width="100px" 
-                  height="100px"
-                  style={{ objectFit: "cover" }}
-                />
-                <h3 style={{ fontSize: "16px", margin: "5px 0" }}>{item.name}</h3>
-              </Link>
+              <Link 
+                to={`/product/${item._id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                {/* Image Container */}
+                <div style={{
+                  width: "100%",
+                  height: "160px",
+                  background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "15px",
+                  position: "relative",
+                  overflow: "hidden"
+                }}>
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      transition: "transform 0.3s ease"
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                  />
+                  {/* Category Badge */}
+                  <span style={{
+                    position: "absolute",
+                    top: "10px",
+                    left: "10px",
+                    background: "rgba(61, 107, 121, 0.9)",
+                    color: "white",
+                    padding: "4px 12px",
+                    borderRadius: "12px",
+                    fontSize: "11px",
+                    fontWeight: "600",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px"
+                  }}>
+                    {item.category}
+                  </span>
+                </div>
 
-              <p style={{ margin: "3px 0" }}>Price: ₹{item.price}</p>
-              <p style={{ margin: "3px 0" }}>Unit: {item.unit}</p>
-              <p style={{ margin: "3px 0", fontSize: "12px", color: "#666" }}>
-                Category: {item.category}
-              </p>
+                {/* Content */}
+                <div style={{ padding: "14px", flex: 1, display: "flex", flexDirection: "column" }}>
+                  <h3 style={{
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    color: "#2d3748",
+                    margin: "0 0 8px 0",
+                    lineHeight: "1.3",
+                    minHeight: "40px"
+                  }}>
+                    {item.name}
+                  </h3>
+                  
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    marginBottom: "12px",
+                    flexWrap: "wrap"
+                  }}>
+                    <div><span style={{
+                      fontSize: "20px",
+                      fontWeight: "700",
+                      color: "#203e4fff"
+                    }}>
+                      ₹{item.price}
+                    </span>
+                    <span style={{
+                      fontSize: "13px",
+                      color: "#718096",
+                      background: "#f7fafc",
+                      padding: "4px 8px",
+                      borderRadius: "6px"
+                    }}>
+                      per {item.unit}
+                    </span>
+                    </div>
+                    
+                    <div><span style={{
+                      fontSize: "13px",
+                      color: "#1f3932ff",
+                      background: "#f7fafc",
+                      padding: "4px 8px",
+                      borderRadius: "6px"
+                    }}>
+                      {item.stock} left
+                    </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
 
               {/* Favorite Icon */}
               {user && (
@@ -446,42 +694,101 @@ function Home({ cart, setCart, favorites, setFavorites }) {
                     top: "10px", 
                     right: "10px", 
                     cursor: "pointer", 
-                    zIndex: 2 
+                    zIndex: 10,
+                    background: "white",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                    transition: "all 0.3s ease"
                   }}
-                  onClick={() => toggleFavorites(item)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavorites(item);
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
                 >
                   <img 
                     src={item.isFav ? "red-heart.png" : "heart.jpg"} 
                     alt="fav" 
-                    width="25px" 
-                    height="25px"
+                    width="18px" 
+                    height="18px"
                   />
                 </span>
               )}
 
               {/* Cart Button */}
-              <button
-                onClick={() => toggleCart(item)}
-                style={{
-                  marginTop: "10px",
-                  width: "100%",
-                  backgroundColor: item.inCart ? "#6c757d" : "#dc3545",
-                  color: "white",
-                  border: "none",
-                  padding: "8px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  transition: "background-color 0.3s"
-                }}
-              >
-                {item.inCart ? "Remove from Cart" : "Add to Cart"}
-              </button>
+              <div style={{ padding: "0 14px 14px 14px" }}>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleCart(item);
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "10px 16px",
+                    background: item.inCart 
+                      ? "#6c757d" 
+                      : "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "10px",
+                    textAlign: "center",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!item.inCart) {
+                      e.currentTarget.style.transform = "scale(1.02)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                >
+                  {item.inCart ? "Remove from Cart" : "Add to Cart"}
+                </button>
+              </div>
             </div>
           ))}
         </div>
-      )}
-    </>
+
+        {filteredItems.length === 0 && (
+          <div style={{
+            textAlign: "center",
+            padding: "60px 20px",
+            background: "white",
+            borderRadius: "16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+          }}>
+            <div style={{ fontSize: "60px", marginBottom: "20px" }}>🔍</div>
+            <h3 style={{ color: "#2d3748", fontSize: "24px", marginBottom: "10px" }}>
+              No Products Found
+            </h3>
+            <p style={{ color: "#718096", fontSize: "16px" }}>
+              Try selecting a different category
+            </p>
+          </div>
+        )}
+      </div>
+
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
   );
 }
 
